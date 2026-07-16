@@ -1,6 +1,6 @@
 local loc = {
     mod_name = {
-        en = "Player Voice Popup",
+        en = "VoxChat",
     },
     mod_description = {
         en = "Shows a speaker popup with character portraits when players use voice chat.",
@@ -43,6 +43,9 @@ local loc = {
     },
     right = {
         en = "Right",
+    },
+    conflict_warning = {
+        en = "WARNING: 'Player Voice Popup' is still installed! Please disable or delete it, as 'VoxChat' replaces it and having both will cause bugs.",
     },
 }
 

@@ -1,5 +1,5 @@
-local mod = get_mod("player_voice_popup")
-local Definitions = mod:io_dofile("player_voice_popup/scripts/mods/player_voice_popup/hud_element_player_voice_popup_definitions")
+local mod = get_mod("VoxChat")
+local Definitions = mod:io_dofile("VoxChat/scripts/mods/VoxChat/hud_element_VoxChat_definitions")
 local HudElementPlayerVoicePopup = class("HudElementPlayerVoicePopup", "HudElementBase")
 
 HudElementPlayerVoicePopup.init = function (self, parent, draw_layer, start_scale)
@@ -419,7 +419,7 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 	local radio = self._widgets_by_name.radio
 	if radio then
 		radio.style.soundwave.horizontal_alignment = alignment
-		radio.style.soundwave.offset[1] = is_left and 250 or -250
+		radio.style.soundwave.offset[1] = is_left and 265 or -265
 	end
 
 	local bar_offset_x = Definitions.bar_offset[1]

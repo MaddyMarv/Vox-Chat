@@ -1,7 +1,7 @@
-local mod = get_mod("player_voice_popup")
+local mod = get_mod("VoxChat")
 
 return {
-    name = "Player Voice Popup",
+    name = "VoxChat",
     description = mod:localize("mod_description"),
     is_togglable = true,
     options = {

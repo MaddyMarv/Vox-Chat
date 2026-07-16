@@ -3,9 +3,9 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 
-local portrait_size = { 100, 120 } -- Extracted from original settings
-local bar_amount = 8
-local bar_size = { 8, 24 }
+local portrait_size = { 80, 90 }
+local bar_amount = 7
+local bar_size = { 12, 30 }
 
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -182,8 +182,8 @@ local widget_definitions = {
 					32,
 				},
 				offset = {
-					250,
-					55,
+					280,
+					265,
 					0,
 				},
 				color = UIHudSettings.color_tint_main_2,
@@ -271,7 +271,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 				local popup_widget = widgets.popup
 
-				local mod = get_mod("player_voice_popup")
+				local mod = get_mod("VoxChat")
 				local alignment = mod and mod:get("alignment") or "left"
 				local start_offset = alignment == "left" and -50 or 50
 
@@ -320,7 +320,7 @@ local animations = {
 				local anim_progress = 1 - math.easeOutCubic(progress)
 				local popup_widget = widgets.popup
 
-				local mod = get_mod("player_voice_popup")
+				local mod = get_mod("VoxChat")
 				local alignment = mod and mod:get("alignment") or "left"
 				local start_offset = alignment == "left" and -50 or 50
 
@@ -338,6 +338,6 @@ return {
     portrait_size = portrait_size,
     bar_amount = bar_amount,
     bar_size = bar_size,
-    bar_offset = { portrait_size[1] + 20, -35, 0 },
-    bar_spacing = 4,
+    bar_offset = { portrait_size[1] + 20, 0, 0 },
+    bar_spacing = 10,
 }
