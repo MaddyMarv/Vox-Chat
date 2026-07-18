@@ -255,13 +255,13 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, name_text, p
 				if portrait_style then
 					portrait_style.material_values.texture_map = texture
 					widget.content.use_pfp_frame = true
-					
+
 					widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 					widget.style.portrait.material = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 					if widget.style.portrait.material_values then
 						widget.style.portrait.material_values.distortion = 0
 					end
-					
+
 					widget.dirty = true
 				end
 			end
@@ -353,7 +353,6 @@ HudElementPlayerVoicePopup._cb_set_player_icon = function (self, profile, grid_i
 	local widget = self._widgets_by_name.popup
 	local material_values = widget.style.portrait.material_values
 
-	-- To match player_panel_base, we change the material to ui_portrait_frame_base
 	widget.style.portrait.material = "content/ui/materials/base/ui_portrait_frame_base"
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
 
@@ -430,9 +429,9 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 			widget.style.background.horizontal_alignment = alignment
 			widget.style.bar.horizontal_alignment = alignment
 			widget.style.frame.horizontal_alignment = alignment
-			
+
 			widget.style.frame.offset[1] = is_left and -2 or 2
-			
+
 			local x_pos = bar_offset_x + (Definitions.bar_size[1] + Definitions.bar_spacing) * (i - 1)
 			widget.offset[1] = is_left and x_pos or -x_pos
 		end
