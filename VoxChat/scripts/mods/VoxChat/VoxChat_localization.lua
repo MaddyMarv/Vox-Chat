@@ -47,6 +47,84 @@ local loc = {
     conflict_warning = {
         en = "WARNING: 'Player Voice Popup' is still installed! Please disable or delete it, as 'VoxChat' replaces it and having both will cause bugs.",
     },
+    in_game_dialogue = {
+        en = "Trigger on In-Game Dialogue",
+    },
+    in_game_dialogue_description = {
+        en = "Also show the voice popup when characters speak in-game dialogue automatically.",
+    },
+    vox_distance = {
+        en = "Vox Distance Threshold",
+    },
+    vox_distance_description = {
+        en = "How far away (in meters) a player must be for their in-game dialogue to trigger the vox popup.",
+    },
+    show_self_dialogue = {
+        en = "Show Self (In-Game)",
+    },
+    show_self_dialogue_description = {
+        en = "Show the voice popup when your own character speaks an automatic voice line.",
+    },
+    show_subtitles = {
+        en = "Show Subtitles",
+    },
+    show_subtitles_description = {
+        en = "Display the actual dialogue text beneath the speaker's name when an in-game voice line triggers the popup.",
+    },
+    subtitle_offset_x = {
+        en = "Subtitle X Offset",
+    },
+    subtitle_offset_x_description = {
+        en = "Shift the subtitle text left or right.",
+    },
+    subtitle_offset_y = {
+        en = "Subtitle Y Offset",
+    },
+    subtitle_offset_y_description = {
+        en = "Shift the subtitle text up or down.",
+    },
+    subtitle_font_size = {
+        en = "Subtitle Font Size",
+    },
+    subtitle_font_size_description = {
+        en = "Change the size of the subtitle text.",
+    },
+    use_custom_subtitle_color = {
+        en = "Use Custom Subtitle Color",
+    },
+    use_custom_subtitle_color_description = {
+        en = "Override the default yellow color with custom RGBA sliders.",
+    },
+    subtitle_color_r = {
+        en = "Red (0-255)",
+    },
+    subtitle_color_g = {
+        en = "Green (0-255)",
+    },
+    subtitle_color_b = {
+        en = "Blue (0-255)",
+    },
+    subtitle_color_a = {
+        en = "Opacity (0-255)",
+    },
+    general_tab = {
+        en = "General",
+    },
+    in_game_dialogue_tab = {
+        en = "In-Game Dialogue",
+    },
+    enable_voip = {
+        en = "Enable Voice Chat Trigger",
+    },
+    enable_voip_description = {
+        en = "Show the voice popup when players use their microphone.",
+    },
+    voip_priority = {
+        en = "Prioritize Voice Chat",
+    },
+    voip_priority_description = {
+        en = "If enabled, real voice chat via microphones will override and replace in-game character dialogue on the UI.",
+    },
 }
 
 return loc

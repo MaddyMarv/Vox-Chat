@@ -28,6 +28,8 @@ HudElementPlayerVoicePopup.init = function (self, parent, draw_layer, start_scal
 	self._speaker_account_id = nil
 	self._portrait_loaded_info = nil
 	self._active_speakers = {}
+	self._voip_speakers = {}
+	self._participant_cache = {}
 
 	self:_update_alignment()
 
@@ -42,7 +44,7 @@ HudElementPlayerVoicePopup.destroy = function (self, ui_renderer)
 	HudElementPlayerVoicePopup.super.destroy(self, ui_renderer)
 end
 
-HudElementPlayerVoicePopup._update_active_speaker = function(self, triggering_participant)
+HudElementPlayerVoicePopup._update_active_speaker = function(self)
 	local top_speaker = self._active_speakers[#self._active_speakers]
 
 	if top_speaker ~= self._speaker_account_id then
@@ -87,10 +89,14 @@ HudElementPlayerVoicePopup._update_active_speaker = function(self, triggering_pa
 				end
 			end
 
-			local fallback_name = (triggering_participant and triggering_participant.account_id == top_speaker) and (triggering_participant.character_name or triggering_participant.account_name) or "Unknown"
+			local fallback_name = "Unknown"
+			local cached_participant = self._participant_cache[top_speaker]
+			if cached_participant then
+				fallback_name = cached_participant.character_name or cached_participant.account_name or "Unknown"
+			end
 			name = name or fallback_name
-
-			self:_mission_speaker_start(name, profile, player_info)
+			local subtitle_id = self._in_game_subtitles and self._in_game_subtitles[top_speaker]
+			self:_mission_speaker_start(name, profile, player_info, subtitle_id)
 		end
 	end
 end
@@ -99,41 +105,26 @@ HudElementPlayerVoicePopup._chat_manager_participant_update = function (self, ch
 	local is_speaking = participant.is_speaking
 	local account_id = participant.account_id
 
-	local local_player_id = Managers.player:local_player(1):account_id()
-
-	if account_id == local_player_id and not mod:get("show_self") then
-		return
-	end
-
-	if mod:get("mission_only") then
-		local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
-		if game_mode_name == "hub" or game_mode_name == "prologue_hub" then
-			return
-		end
-	end
-
-	local index = table.find(self._active_speakers, account_id)
-
 	if is_speaking then
-		if not index then
-			table.insert(self._active_speakers, account_id)
+		if not table.find(self._voip_speakers, account_id) then
+			table.insert(self._voip_speakers, account_id)
 		end
 	else
+		local index = table.find(self._voip_speakers, account_id)
 		if index then
-			table.remove(self._active_speakers, index)
+			table.remove(self._voip_speakers, index)
 		end
 	end
 
-	self:_update_active_speaker(participant)
+	self._participant_cache[account_id] = participant
 end
 
 HudElementPlayerVoicePopup._chat_manager_participant_removed = function (self, channel_handle, participant_uri, participant)
 	local account_id = participant and participant.account_id
 	if account_id then
-		local index = table.find(self._active_speakers, account_id)
+		local index = table.find(self._voip_speakers, account_id)
 		if index then
-			table.remove(self._active_speakers, index)
-			self:_update_active_speaker(nil)
+			table.remove(self._voip_speakers, index)
 		end
 	end
 end
@@ -141,8 +132,137 @@ end
 HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementPlayerVoicePopup.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 
-	if mod:get("alignment") ~= self._current_alignment then
+	local current_speakers = {}
+	self._in_game_subtitles = {}
+
+	local dialogue_speakers = {}
+	local voip_speakers = {}
+
+	local local_player = Managers.player:local_player(1)
+	local local_player_id = local_player and local_player:account_id()
+
+	if mod:get("in_game_dialogue") then
+		local dialogue_system = Managers.state.extension and Managers.state.extension:system("dialogue_system")
+		if dialogue_system and dialogue_system.playing_dialogues_array then
+			local playing_dialogues = dialogue_system:playing_dialogues_array()
+			local local_pos = local_player and local_player.player_unit and Unit.alive(local_player.player_unit) and Unit.world_position(local_player.player_unit, 1)
+			local distance_threshold = mod:get("vox_distance") or 15
+
+			for i = 1, #playing_dialogues do
+				local dialogue = playing_dialogues[i]
+				local unit = dialogue.currently_playing_unit
+				if unit and Unit.alive(unit) then
+					local is_far_enough = true
+					if local_pos then
+						local speaker_pos = Unit.world_position(unit, 1)
+						local distance = Vector3.distance(local_pos, speaker_pos)
+						if distance < distance_threshold then
+							is_far_enough = false
+						end
+					end
+
+					local is_local = (local_player and unit == local_player.player_unit)
+					local should_add = false
+
+					if is_local then
+						should_add = mod:get("show_self_dialogue") ~= false
+					else
+						should_add = is_far_enough
+					end
+
+					if should_add then
+						local player_unit_spawn_manager = Managers.state.player_unit_spawn
+						local player = player_unit_spawn_manager and player_unit_spawn_manager:owner(unit)
+						if player then
+							local account_id = player:account_id()
+							if account_id and not table.find(dialogue_speakers, account_id) then
+								table.insert(dialogue_speakers, account_id)
+							end
+							if account_id then
+								self._in_game_subtitles[account_id] = dialogue.currently_playing_subtitle
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if mod:get("enable_voip") ~= false then
+		local show_self_voip = mod:get("show_self") ~= false
+		for i = 1, #self._voip_speakers do
+			local account_id = self._voip_speakers[i]
+			local is_local = (local_player_id and account_id == local_player_id)
+			
+			if not is_local or show_self_voip then
+				if not table.find(voip_speakers, account_id) then
+					table.insert(voip_speakers, account_id)
+				end
+			end
+		end
+	end
+
+	local function append_speakers(target_list, source_list)
+		for i = 1, #source_list do
+			local account_id = source_list[i]
+			local existing_index = table.find(target_list, account_id)
+			if existing_index then
+				table.remove(target_list, existing_index)
+			end
+			table.insert(target_list, account_id)
+		end
+	end
+
+	if mod:get("voip_priority") then
+		append_speakers(current_speakers, dialogue_speakers)
+		append_speakers(current_speakers, voip_speakers)
+	else
+		append_speakers(current_speakers, voip_speakers)
+		append_speakers(current_speakers, dialogue_speakers)
+	end
+
+	if mod:get("mission_only") then
+		local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
+		if game_mode_name == "hub" or game_mode_name == "prologue_hub" then
+			table.clear(current_speakers)
+		end
+	end
+
+	self._active_speakers = current_speakers
+	local top_speaker = current_speakers[#current_speakers]
+	if top_speaker ~= self._speaker_account_id then
+		self:_update_active_speaker()
+	end
+
+	local current_subtitle_offset_x = mod:get("subtitle_offset_x") or 0
+	local current_subtitle_offset_y = mod:get("subtitle_offset_y") or 70
+	local current_subtitle_font_size = mod:get("subtitle_font_size") or 24
+	local use_custom_color = mod:get("use_custom_subtitle_color") or false
+	local color_r = mod:get("subtitle_color_r") or 255
+	local color_g = mod:get("subtitle_color_g") or 255
+	local color_b = mod:get("subtitle_color_b") or 255
+	local color_a = mod:get("subtitle_color_a") or 255
+
+	if mod:get("alignment") ~= self._current_alignment
+		or current_subtitle_offset_x ~= self._current_subtitle_offset_x
+		or current_subtitle_offset_y ~= self._current_subtitle_offset_y
+		or current_subtitle_font_size ~= self._current_subtitle_font_size
+		or use_custom_color ~= self._use_custom_color
+		or color_r ~= self._color_r
+		or color_g ~= self._color_g
+		or color_b ~= self._color_b
+		or color_a ~= self._color_a then
+		
 		self:_update_alignment()
+		
+		self._current_subtitle_offset_x = current_subtitle_offset_x
+		self._current_subtitle_offset_y = current_subtitle_offset_y
+		self._current_subtitle_font_size = current_subtitle_font_size
+		self._use_custom_color = use_custom_color
+		self._color_r = color_r
+		self._color_g = color_g
+		self._color_b = color_b
+		self._color_a = color_a
 	end
 
 	if self._popup_animation_id and not self:_is_animation_active(self._popup_animation_id) then
@@ -204,7 +324,7 @@ HudElementPlayerVoicePopup._mission_speaker_stop = function (self)
 	self._popup_animation_id = popup_animation_id
 end
 
-HudElementPlayerVoicePopup._mission_speaker_start = function (self, name_text, profile, player_info)
+HudElementPlayerVoicePopup._mission_speaker_start = function (self, name_text, profile, player_info, subtitle_id)
 	if self._popup_animation_id then
 		self:_stop_animation(self._popup_animation_id)
 		self._popup_animation_id = nil
@@ -212,6 +332,13 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, name_text, p
 
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.name_text.content.name_text = name_text
+	widgets_by_name.title_text.content.title_text = "VOICE COMM"
+	
+	if subtitle_id and mod:get("show_subtitles") ~= false then
+		widgets_by_name.subtitle_text.content.subtitle_text = Localize(subtitle_id)
+	else
+		widgets_by_name.subtitle_text.content.subtitle_text = ""
+	end
 
 	local style = mod:get("portrait_style") or "pfp"
 	local pfp_mod = get_mod("ProfilePictures")
@@ -255,13 +382,13 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, name_text, p
 				if portrait_style then
 					portrait_style.material_values.texture_map = texture
 					widget.content.use_pfp_frame = true
-
+					
 					widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 					widget.style.portrait.material = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 					if widget.style.portrait.material_values then
 						widget.style.portrait.material_values.distortion = 0
 					end
-
+					
 					widget.dirty = true
 				end
 			end
@@ -415,6 +542,31 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 		title_text.style.title_text.offset[1] = is_left and (Definitions.portrait_size[1] + 20) or -(Definitions.portrait_size[1] + 20)
 	end
 
+	local subtitle_text = self._widgets_by_name.subtitle_text
+	if subtitle_text then
+		local sub_offset_x = mod:get("subtitle_offset_x") or 0
+		local sub_offset_y = mod:get("subtitle_offset_y") or 70
+		local sub_font_size = mod:get("subtitle_font_size") or 24
+		
+		local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
+		local color_table = UIHudSettings.color_tint_main_2
+		if mod:get("use_custom_subtitle_color") then
+			local a = mod:get("subtitle_color_a") or 255
+			local r = mod:get("subtitle_color_r") or 255
+			local g = mod:get("subtitle_color_g") or 255
+			local b = mod:get("subtitle_color_b") or 255
+			color_table = { a, r, g, b }
+		end
+
+		local base_x = 0
+		subtitle_text.style.subtitle_text.horizontal_alignment = alignment
+		subtitle_text.style.subtitle_text.text_horizontal_alignment = alignment
+		subtitle_text.style.subtitle_text.offset[1] = base_x + (is_left and sub_offset_x or -sub_offset_x)
+		subtitle_text.style.subtitle_text.offset[2] = sub_offset_y
+		subtitle_text.style.subtitle_text.font_size = sub_font_size
+		subtitle_text.style.subtitle_text.text_color = color_table
+	end
+
 	local radio = self._widgets_by_name.radio
 	if radio then
 		radio.style.soundwave.horizontal_alignment = alignment
@@ -429,9 +581,9 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 			widget.style.background.horizontal_alignment = alignment
 			widget.style.bar.horizontal_alignment = alignment
 			widget.style.frame.horizontal_alignment = alignment
-
+			
 			widget.style.frame.offset[1] = is_left and -2 or 2
-
+			
 			local x_pos = bar_offset_x + (Definitions.bar_size[1] + Definitions.bar_spacing) * (i - 1)
 			widget.offset[1] = is_left and x_pos or -x_pos
 		end

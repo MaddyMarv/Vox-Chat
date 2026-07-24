@@ -47,6 +47,12 @@ title_text_style.offset = {
 }
 title_text_style.text_color = UIHudSettings.color_tint_main_2
 
+local subtitle_text_style = table.clone(name_text_style)
+subtitle_text_style.size = { 650, 60 }
+subtitle_text_style.offset = { portrait_size[1] + 20, 70, 2 }
+subtitle_text_style.font_size = 24
+subtitle_text_style.text_color = table.clone(UIHudSettings.color_tint_main_2)
+
 local widget_definitions = {
 	popup = UIWidget.create_definition({
 		{
@@ -169,6 +175,15 @@ local widget_definitions = {
 			style = title_text_style,
 		},
 	}, "background"),
+	subtitle_text = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "subtitle_text",
+			value_id = "subtitle_text",
+			value = "",
+			style = subtitle_text_style,
+		},
+	}, "background"),
 	radio = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -183,7 +198,7 @@ local widget_definitions = {
 				},
 				offset = {
 					280,
-					265,
+					55,
 					0,
 				},
 				color = UIHudSettings.color_tint_main_2,
