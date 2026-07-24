@@ -297,26 +297,30 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 		end
 	end
 
-	if self._full_subtitle_text and self._full_subtitle_text ~= "" and mod:get("scroll_subtitles") ~= false then
-		local text = self._full_subtitle_text
-		local total_len = utf8_len(text)
-		local scroll_len = mod:get("scroll_subtitles_length") or 40
-		
-		if total_len > scroll_len then
-			local speed = mod:get("scroll_subtitles_speed") or 0.2
-			self._subtitle_scroll_timer = (self._subtitle_scroll_timer or 0) + dt
-			if self._subtitle_scroll_timer >= speed then
-				self._subtitle_scroll_timer = self._subtitle_scroll_timer - speed
-				self._subtitle_scroll_index = (self._subtitle_scroll_index or 1) + 1
-				
-				if self._subtitle_scroll_index > total_len then
-					self._subtitle_scroll_index = 1
-				end
-			end
+	if self._full_subtitle_text and self._full_subtitle_text ~= "" then
+		if mod:get("scroll_subtitles") ~= false then
+			local text = self._full_subtitle_text
+			local total_len = utf8_len(text)
+			local scroll_len = mod:get("scroll_subtitles_length") or 40
 			
-			local padded_text = text .. "          " .. text
-			local display_text = utf8_sub(padded_text, self._subtitle_scroll_index, self._subtitle_scroll_index + scroll_len - 1)
-			self._widgets_by_name.subtitle_text.content.subtitle_text = display_text
+			if total_len > scroll_len then
+				local speed = mod:get("scroll_subtitles_speed") or 0.2
+				self._subtitle_scroll_timer = (self._subtitle_scroll_timer or 0) + dt
+				if self._subtitle_scroll_timer >= speed then
+					self._subtitle_scroll_timer = self._subtitle_scroll_timer - speed
+					self._subtitle_scroll_index = (self._subtitle_scroll_index or 1) + 1
+					
+					if self._subtitle_scroll_index > total_len then
+						self._subtitle_scroll_index = 1
+					end
+				end
+				
+				local padded_text = text .. "          " .. text
+				local display_text = utf8_sub(padded_text, self._subtitle_scroll_index, self._subtitle_scroll_index + scroll_len - 1)
+				self._widgets_by_name.subtitle_text.content.subtitle_text = display_text
+			else
+				self._widgets_by_name.subtitle_text.content.subtitle_text = self._full_subtitle_text
+			end
 		else
 			self._widgets_by_name.subtitle_text.content.subtitle_text = self._full_subtitle_text
 		end
