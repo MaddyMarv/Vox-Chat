@@ -48,11 +48,11 @@ title_text_style.offset = {
 title_text_style.text_color = UIHudSettings.color_tint_main_2
 
 local subtitle_text_style = table.clone(name_text_style)
-subtitle_text_style.size = { 650, 60 }
-subtitle_text_style.offset = { portrait_size[1] + 20, 70, 2 }
+subtitle_text_style.size = { 650, 300 }
+subtitle_text_style.offset = { portrait_size[1] + 20, 95, 2 }
 subtitle_text_style.font_size = 24
 subtitle_text_style.text_color = table.clone(UIHudSettings.color_tint_main_2)
-
+subtitle_text_style.text_vertical_alignment = "top"
 local widget_definitions = {
 	popup = UIWidget.create_definition({
 		{

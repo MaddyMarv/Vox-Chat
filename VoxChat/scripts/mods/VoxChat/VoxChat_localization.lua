@@ -89,12 +89,7 @@ local loc = {
     subtitle_font_size_description = {
         en = "Change the size of the subtitle text.",
     },
-    use_custom_subtitle_color = {
-        en = "Use Custom Subtitle Color",
-    },
-    use_custom_subtitle_color_description = {
-        en = "Override the default yellow color with custom RGBA sliders.",
-    },
+
     subtitle_color_r = {
         en = "Red (0-255)",
     },

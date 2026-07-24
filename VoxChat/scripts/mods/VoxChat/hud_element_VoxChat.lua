@@ -29,6 +29,7 @@ HudElementPlayerVoicePopup.init = function (self, parent, draw_layer, start_scal
 	self._portrait_loaded_info = nil
 	self._active_speakers = {}
 	self._voip_speakers = {}
+	self._dialogue_speakers = {}
 	self._participant_cache = {}
 
 	self:_update_alignment()
@@ -148,6 +149,8 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 			local local_pos = local_player and local_player.player_unit and Unit.alive(local_player.player_unit) and Unit.world_position(local_player.player_unit, 1)
 			local distance_threshold = mod:get("vox_distance") or 15
 
+			local current_active_dialogues = {}
+
 			for i = 1, #playing_dialogues do
 				local dialogue = playing_dialogues[i]
 				local unit = dialogue.currently_playing_unit
@@ -175,8 +178,8 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 						local player = player_unit_spawn_manager and player_unit_spawn_manager:owner(unit)
 						if player then
 							local account_id = player:account_id()
-							if account_id and not table.find(dialogue_speakers, account_id) then
-								table.insert(dialogue_speakers, account_id)
+							if account_id and not table.find(current_active_dialogues, account_id) then
+								table.insert(current_active_dialogues, account_id)
 							end
 							if account_id then
 								self._in_game_subtitles[account_id] = dialogue.currently_playing_subtitle
@@ -185,6 +188,22 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 					end
 				end
 			end
+			
+			for i = 1, #current_active_dialogues do
+				local id = current_active_dialogues[i]
+				if not table.find(self._dialogue_speakers, id) then
+					table.insert(self._dialogue_speakers, id)
+				end
+			end
+			
+			for i = #self._dialogue_speakers, 1, -1 do
+				local id = self._dialogue_speakers[i]
+				if not table.find(current_active_dialogues, id) then
+					table.remove(self._dialogue_speakers, i)
+				end
+			end
+			
+			dialogue_speakers = table.clone(self._dialogue_speakers)
 		end
 	end
 
@@ -233,21 +252,36 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 	if top_speaker ~= self._speaker_account_id then
 		self:_update_active_speaker()
 	end
+	
+	if top_speaker then
+		local new_subtitle = self._in_game_subtitles[top_speaker]
+		if self._current_subtitle_id ~= new_subtitle then
+			self._current_subtitle_id = new_subtitle
+			local text = ""
+			if new_subtitle and mod:get("show_subtitles") ~= false then
+				text = Localize(new_subtitle)
+			end
+			self._widgets_by_name.subtitle_text.content.subtitle_text = text
+		end
+	else
+		if self._current_subtitle_id ~= nil then
+			self._current_subtitle_id = nil
+			self._widgets_by_name.subtitle_text.content.subtitle_text = ""
+		end
+	end
 
 	local current_subtitle_offset_x = mod:get("subtitle_offset_x") or 0
-	local current_subtitle_offset_y = mod:get("subtitle_offset_y") or 70
+	local current_subtitle_offset_y = mod:get("subtitle_offset_y") or 95
 	local current_subtitle_font_size = mod:get("subtitle_font_size") or 24
-	local use_custom_color = mod:get("use_custom_subtitle_color") or false
-	local color_r = mod:get("subtitle_color_r") or 255
-	local color_g = mod:get("subtitle_color_g") or 255
-	local color_b = mod:get("subtitle_color_b") or 255
+	local color_r = mod:get("subtitle_color_r") or 241
+	local color_g = mod:get("subtitle_color_g") or 231
+	local color_b = mod:get("subtitle_color_b") or 163
 	local color_a = mod:get("subtitle_color_a") or 255
 
 	if mod:get("alignment") ~= self._current_alignment
 		or current_subtitle_offset_x ~= self._current_subtitle_offset_x
 		or current_subtitle_offset_y ~= self._current_subtitle_offset_y
 		or current_subtitle_font_size ~= self._current_subtitle_font_size
-		or use_custom_color ~= self._use_custom_color
 		or color_r ~= self._color_r
 		or color_g ~= self._color_g
 		or color_b ~= self._color_b
@@ -258,7 +292,6 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 		self._current_subtitle_offset_x = current_subtitle_offset_x
 		self._current_subtitle_offset_y = current_subtitle_offset_y
 		self._current_subtitle_font_size = current_subtitle_font_size
-		self._use_custom_color = use_custom_color
 		self._color_r = color_r
 		self._color_g = color_g
 		self._color_b = color_b
@@ -286,6 +319,17 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 			local anim_progress = math.min((1 + math.sin(Application.time_since_launch() * 6) * 0.5) * math.random_range(0.3, 0.8), 1)
 			widget.style.portrait.material_values.distortion = 0.8 + (anim_progress * 0.4)
 			widget.dirty = true
+		end
+	end
+	
+	local subtitle_widget = self._widgets_by_name.subtitle_text
+	if subtitle_widget and self._is_speaking then
+		local subtitle_text = subtitle_widget.content.subtitle_text
+		if subtitle_text and subtitle_text ~= "" then
+			local style = subtitle_widget.style.subtitle_text
+			local is_left = self._current_alignment == "left"
+			local sub_offset_x = self._current_subtitle_offset_x or 0
+			style.offset[1] = (is_left and sub_offset_x or -sub_offset_x)
 		end
 	end
 end
@@ -545,18 +589,15 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 	local subtitle_text = self._widgets_by_name.subtitle_text
 	if subtitle_text then
 		local sub_offset_x = mod:get("subtitle_offset_x") or 0
-		local sub_offset_y = mod:get("subtitle_offset_y") or 70
+		local sub_offset_y = mod:get("subtitle_offset_y") or 95
 		local sub_font_size = mod:get("subtitle_font_size") or 24
 		
 		local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
-		local color_table = UIHudSettings.color_tint_main_2
-		if mod:get("use_custom_subtitle_color") then
-			local a = mod:get("subtitle_color_a") or 255
-			local r = mod:get("subtitle_color_r") or 255
-			local g = mod:get("subtitle_color_g") or 255
-			local b = mod:get("subtitle_color_b") or 255
-			color_table = { a, r, g, b }
-		end
+		local a = mod:get("subtitle_color_a") or 255
+		local r = mod:get("subtitle_color_r") or 241
+		local g = mod:get("subtitle_color_g") or 231
+		local b = mod:get("subtitle_color_b") or 163
+		local color_table = { a, r, g, b }
 
 		local base_x = 0
 		subtitle_text.style.subtitle_text.horizontal_alignment = alignment
