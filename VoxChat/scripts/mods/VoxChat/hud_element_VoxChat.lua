@@ -1,5 +1,28 @@
 local mod = get_mod("VoxChat")
 local Definitions = mod:io_dofile("VoxChat/scripts/mods/VoxChat/hud_element_VoxChat_definitions")
+
+local function utf8_sub(s, start_idx, end_idx)
+    if not s or s == "" then return "" end
+    local chars = {}
+    for char in string.gmatch(s, "[%z\1-\127\194-\244][\128-\191]*") do
+        table.insert(chars, char)
+    end
+    local len = #chars
+    if start_idx < 1 then start_idx = 1 end
+    if end_idx > len then end_idx = len end
+    if start_idx > end_idx then return "" end
+    return table.concat(chars, "", start_idx, end_idx)
+end
+
+local function utf8_len(s)
+    if not s or s == "" then return 0 end
+    local count = 0
+    for _ in string.gmatch(s, "[%z\1-\127\194-\244][\128-\191]*") do
+        count = count + 1
+    end
+    return count
+end
+
 local HudElementPlayerVoicePopup = class("HudElementPlayerVoicePopup", "HudElementBase")
 
 HudElementPlayerVoicePopup.init = function (self, parent, draw_layer, start_scale)
@@ -261,12 +284,53 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 			if new_subtitle and mod:get("show_subtitles") ~= false then
 				text = Localize(new_subtitle)
 			end
+			self._full_subtitle_text = text
+			self._subtitle_scroll_index = 1
+			self._subtitle_scroll_timer = 0
 			self._widgets_by_name.subtitle_text.content.subtitle_text = text
 		end
 	else
 		if self._current_subtitle_id ~= nil then
 			self._current_subtitle_id = nil
+			self._full_subtitle_text = nil
 			self._widgets_by_name.subtitle_text.content.subtitle_text = ""
+		end
+	end
+
+	if self._full_subtitle_text and self._full_subtitle_text ~= "" and mod:get("scroll_subtitles") ~= false then
+		local text = self._full_subtitle_text
+		local total_len = utf8_len(text)
+		local scroll_len = mod:get("scroll_subtitles_length") or 40
+		
+		if total_len > scroll_len then
+			local speed = mod:get("scroll_subtitles_speed") or 0.2
+			self._subtitle_scroll_timer = (self._subtitle_scroll_timer or 0) + dt
+			if self._subtitle_scroll_timer >= speed then
+				self._subtitle_scroll_timer = self._subtitle_scroll_timer - speed
+				self._subtitle_scroll_index = (self._subtitle_scroll_index or 1) + 1
+				
+				if self._subtitle_scroll_index > total_len then
+					self._subtitle_scroll_index = 1
+				end
+			end
+			
+			local padded_text = text .. "          " .. text
+			local display_text = utf8_sub(padded_text, self._subtitle_scroll_index, self._subtitle_scroll_index + scroll_len - 1)
+			self._widgets_by_name.subtitle_text.content.subtitle_text = display_text
+		else
+			self._widgets_by_name.subtitle_text.content.subtitle_text = self._full_subtitle_text
+		end
+	end
+
+	if self._is_speaking then
+		self._incoming_dots_timer = (self._incoming_dots_timer or 0) + dt
+		if self._incoming_dots_timer >= 0.5 then
+			self._incoming_dots_timer = 0
+			self._incoming_dots_count = ((self._incoming_dots_count or 0) + 1) % 4
+			local dots = string.rep(".", self._incoming_dots_count)
+			
+			local base_text = self._is_dialogue_speaker and "INCOMING" or "VOICE COMM - INCOMING"
+			self._widgets_by_name.title_text.content.title_text = base_text .. dots
 		end
 	end
 
@@ -376,7 +440,16 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, name_text, p
 
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.name_text.content.name_text = name_text
-	widgets_by_name.title_text.content.title_text = "VOICE COMM"
+	
+	self._is_dialogue_speaker = (subtitle_id ~= nil)
+	self._incoming_dots_timer = 0
+	self._incoming_dots_count = 0
+	
+	if self._is_dialogue_speaker then
+		widgets_by_name.title_text.content.title_text = "INCOMING"
+	else
+		widgets_by_name.title_text.content.title_text = "VOICE COMM - INCOMING"
+	end
 	
 	if subtitle_id and mod:get("show_subtitles") ~= false then
 		widgets_by_name.subtitle_text.content.subtitle_text = Localize(subtitle_id)

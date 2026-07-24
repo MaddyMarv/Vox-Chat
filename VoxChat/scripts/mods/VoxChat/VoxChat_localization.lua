@@ -71,6 +71,24 @@ local loc = {
     show_subtitles_description = {
         en = "Display the actual dialogue text beneath the speaker's name when an in-game voice line triggers the popup.",
     },
+    scroll_subtitles = {
+        en = "Scroll Subtitles",
+    },
+    scroll_subtitles_description = {
+        en = "Scroll the subtitles like a news ticker.",
+    },
+    scroll_subtitles_length = {
+        en = "Scroll Max Characters",
+    },
+    scroll_subtitles_length_description = {
+        en = "The maximum number of characters to display at once when scrolling.",
+    },
+    scroll_subtitles_speed = {
+        en = "Scroll Speed (Seconds)",
+    },
+    scroll_subtitles_speed_description = {
+        en = "How often to shift the subtitle text (in seconds).",
+    },
     subtitle_offset_x = {
         en = "Subtitle X Offset",
     },
