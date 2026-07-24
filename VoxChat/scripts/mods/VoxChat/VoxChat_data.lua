@@ -72,6 +72,21 @@ return {
                 tab = mod:localize("in_game_dialogue_tab"),
                 sub_widgets = {
                     {
+                        setting_id = "in_game_dialogue",
+                        type = "checkbox",
+                        default_value = false,
+                        title = "in_game_dialogue",
+                        tooltip = "in_game_dialogue_description",
+                    },
+                    {
+                        setting_id = "vox_distance",
+                        type = "numeric",
+                        default_value = 15,
+                        range = {0, 50},
+                        title = "vox_distance",
+                        tooltip = "vox_distance_description",
+                    },
+                    {
                         setting_id = "show_subtitles",
                         type = "checkbox",
                         default_value = true,
@@ -143,21 +158,6 @@ return {
                         default_value = 255,
                         range = {0, 255},
                         title = "subtitle_color_a",
-                    },
-                    {
-                        setting_id = "in_game_dialogue",
-                        type = "checkbox",
-                        default_value = false,
-                        title = "in_game_dialogue",
-                        tooltip = "in_game_dialogue_description",
-                    },
-                    {
-                        setting_id = "vox_distance",
-                        type = "numeric",
-                        default_value = 15,
-                        range = {0, 50},
-                        title = "vox_distance",
-                        tooltip = "vox_distance_description",
                     },
                 }
             }
