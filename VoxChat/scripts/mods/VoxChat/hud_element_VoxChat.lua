@@ -381,9 +381,9 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 
 	self._bar_timer = bar_timer
 
-	if self._is_speaking and (mod:get("portrait_style") or "pfp") == "tv" then
+	if self._is_speaking then
 		local widget = self._widgets_by_name.popup
-		if widget and widget.style.portrait and widget.style.portrait.material_values then
+		if widget and widget.style.portrait and widget.style.portrait.material == "content/ui/materials/base/ui_radio_portrait_base" and widget.style.portrait.material_values then
 			local anim_progress = math.min((1 + math.sin(Application.time_since_launch() * 6) * 0.5) * math.random_range(0.3, 0.8), 1)
 			widget.style.portrait.material_values.distortion = 0.8 + (anim_progress * 0.4)
 			widget.dirty = true
@@ -476,17 +476,18 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, name_text, p
 		end
 	end
 
-	local load_3d = (style == "3d" and portrait_rendering_enabled and profile)
+	local load_3d = ((style == "3d" or style == "pfp") and portrait_rendering_enabled and profile)
+
+	self:_unload_portrait_icon()
+
+	widgets_by_name.popup.content.portrait = "content/ui/materials/base/ui_radio_portrait_base"
+	widgets_by_name.popup.style.portrait.material = "content/ui/materials/base/ui_radio_portrait_base"
+	if widgets_by_name.popup.style.portrait.material_values then
+		widgets_by_name.popup.style.portrait.material_values.distortion = 1
+	end
 
 	if load_3d then
 		self:_load_portrait_icon(profile, player_info)
-	else
-		self:_unload_portrait_icon()
-		widgets_by_name.popup.content.portrait = "content/ui/materials/base/ui_radio_portrait_base"
-		widgets_by_name.popup.style.portrait.material = "content/ui/materials/base/ui_radio_portrait_base"
-		if widgets_by_name.popup.style.portrait.material_values then
-			widgets_by_name.popup.style.portrait.material_values.distortion = 1
-		end
 	end
 
 	if profile then
@@ -495,8 +496,12 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, name_text, p
 		self:_unload_portrait_frame()
 	end
 
+	local current_account_id = self._speaker_account_id
 	if style == "pfp" and pfp_mod and player_info then
 		pfp_mod.load_profile_image(player_info, function(texture)
+			if self._speaker_account_id ~= current_account_id then
+				return
+			end
 			local widget = self._widgets_by_name.popup
 			if widget then
 				local portrait_style = widget.style.profile
@@ -601,8 +606,10 @@ HudElementPlayerVoicePopup._cb_set_player_icon = function (self, profile, grid_i
 	local widget = self._widgets_by_name.popup
 	local material_values = widget.style.portrait.material_values
 
-	widget.style.portrait.material = "content/ui/materials/base/ui_portrait_frame_base"
-	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
+	if not widget.content.use_pfp_frame then
+		widget.style.portrait.material = "content/ui/materials/base/ui_portrait_frame_base"
+		widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
+	end
 
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
