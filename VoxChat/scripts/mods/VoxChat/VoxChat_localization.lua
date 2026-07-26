@@ -150,6 +150,21 @@ local loc = {
     voip_priority_description = {
         en = "If enabled, real voice chat via microphones will override and replace in-game character dialogue on the UI.",
     },
+    dialogue_filter_mode = {
+        en = "Dialogue Filter Mode",
+    },
+    dialogue_filter_mode_description = {
+        en = "Choose which types of in-game dialogue trigger the Vox popup.",
+    },
+    filter_mode_all = {
+        en = "Show All (Default)",
+    },
+    filter_mode_combat_only = {
+        en = "Combat & Pings Only",
+    },
+    filter_mode_banter_only = {
+        en = "Banter & Story Only",
+    },
 }
 
 return loc

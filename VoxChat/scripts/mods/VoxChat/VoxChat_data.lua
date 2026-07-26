@@ -57,6 +57,18 @@ return {
                         tooltip = "in_game_dialogue_description",
                     },
                     {
+                        setting_id = "dialogue_filter_mode",
+                        type = "dropdown",
+                        default_value = "all",
+                        options = {
+                            { text = "filter_mode_all", value = "all" },
+                            { text = "filter_mode_combat_only", value = "combat_only" },
+                            { text = "filter_mode_banter_only", value = "banter_only" },
+                        },
+                        title = "dialogue_filter_mode",
+                        tooltip = "dialogue_filter_mode_description",
+                    },
+                    {
                         setting_id = "vox_distance",
                         type = "numeric",
                         default_value = 15,

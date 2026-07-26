@@ -23,6 +23,145 @@ local function utf8_len(s)
     return count
 end
 
+local PLAYER_COM_WHEEL_CONCEPT_FRAGMENTS = {
+    "on_demand_com_wheel",
+    "on_demand_vo_tag_enemy",
+    "on_demand_vo_tag_item",
+    "smart_tag",
+    "tag_item",
+    "tag_enemy",
+    "look_at",
+}
+
+local PLAYER_COMBAT_CONCEPT_FRAGMENTS = {
+    "combat_ability",
+    "enemy_kill",
+    "heard_enemy",
+    "heard_horde",
+    "higher_elite_threat",
+    "interaction_vo",
+    "knocked_down",
+    "player_death",
+    "player_enemy_alert",
+    "seen_enemy_group_far_range_shooting_behind_cover",
+    "seen_enemy",
+    "seen_horde",
+    "throwing_item",
+    "throwing_net",
+    "warning",
+    "catching_net",
+    "heal_start",
+    "ledge_hanging",
+    "pounced_by_special_attack",
+    "rapid_loosing_health",
+    "friends_close",
+    "friends_distant",
+    "heat_vo",
+    "ranged_idle_player_out_of_ammo",
+    "reload_failed",
+    "reloading",
+    "pinned_by_enemies",
+}
+
+local PLAYER_SOCIAL_CONCEPT_FRAGMENTS = {
+    "confessional_vo",
+    "enemy_near_death_monster",
+    "environmental_story",
+    "friendly_fire",
+    "head_shot",
+    "health_hog",
+    "heard_speak",
+    "kill_spree_self",
+    "knocked_down_multiple_times",
+    "multiple_head_pops",
+    "player_tip_armor_hit",
+    "short_story_talk",
+    "start_banter",
+    "story_talk",
+    "combat_story_talk",
+    "cutscene_vo_line",
+    "ammo_hog",
+    "seen_killstreak_",
+}
+
+local function _contains(value, fragment)
+    return type(value) == "string" and type(fragment) == "string" and string.find(value, fragment, 1, true) ~= nil
+end
+
+local function _contains_any(value, fragments)
+    if type(value) ~= "string" or value == "" or type(fragments) ~= "table" then
+        return false
+    end
+    for i = 1, #fragments do
+        if _contains(value, fragments[i]) then
+            return true
+        end
+    end
+    return false
+end
+
+local function _starts_with_any(value, prefixes)
+    if type(value) ~= "string" or value == "" or type(prefixes) ~= "table" then
+        return false
+    end
+    for i = 1, #prefixes do
+        if string.find(value, prefixes[i], 1, true) == 1 then
+            return true
+        end
+    end
+    return false
+end
+
+local function _classify_explicit_player_concept(identifier)
+    if _contains_any(identifier, PLAYER_COM_WHEEL_CONCEPT_FRAGMENTS) then return "com_wheel" end
+    if _contains_any(identifier, PLAYER_SOCIAL_CONCEPT_FRAGMENTS) then return "social" end
+    if _contains_any(identifier, PLAYER_COMBAT_CONCEPT_FRAGMENTS) then return "combat" end
+    return nil
+end
+
+local function _is_player_explicit_social_event(identifier)
+    if _contains(identifier, "conversation") then return true end
+    if _contains(identifier, "bonding") then return true end
+    if _contains(identifier, "reply") and not _contains(identifier, "no_reply") then return true end
+    return false
+end
+
+local function _is_player_combat_event(identifier)
+    if _starts_with_any(identifier, {
+            "player_death", "team_downed", "player_ability", "player_kill", "player_horde",
+            "player_throw", "team_warning", "team_hacking", "team_monster", "player_blitz",
+            "seen_netgunner", "seen_enemy_",
+        }) then
+        return true
+    end
+
+    if _contains_any(identifier, {
+            "ability", "blitz", "throwing_grenade", "enemy_daemonhost", "event_scan",
+            "luggable", "warning_exploding_barrel", "critical_health", "response_to_hacking_fix_decode",
+            "hacking_fix_decode", "monster_fight_start_reaction", "disabled_by_enemy", "need_rescue",
+            "disabled_by_chaos_hound", "response_for_pinned_by_enemies", "_kill",
+        }) then
+        return true
+    end
+
+    return false
+end
+
+local function _is_banter(dialogue)
+	local identifier = dialogue.concept or dialogue.dialogue_name or dialogue.dialogue_event_name or dialogue.currently_playing_subtitle or dialogue.category or dialogue.sound_event
+	if not identifier or type(identifier) ~= "string" then return false end
+	
+    local explicit = _classify_explicit_player_concept(identifier)
+    if explicit == "social" then return true end
+    if explicit == "com_wheel" or explicit == "combat" then return false end
+    
+    if _contains(identifier, "com_wheel_vo") then return false end
+    if _is_player_explicit_social_event(identifier) then return true end
+    if _is_player_combat_event(identifier) then return false end
+    
+    return true
+end
+
 local HudElementPlayerVoicePopup = class("HudElementPlayerVoicePopup", "HudElementBase")
 
 HudElementPlayerVoicePopup.init = function (self, parent, draw_layer, start_scale)
@@ -200,12 +339,21 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 						local player_unit_spawn_manager = Managers.state.player_unit_spawn
 						local player = player_unit_spawn_manager and player_unit_spawn_manager:owner(unit)
 						if player then
-							local account_id = player:account_id()
-							if account_id and not table.find(current_active_dialogues, account_id) then
-								table.insert(current_active_dialogues, account_id)
+							local filter_mode = mod:get("dialogue_filter_mode") or "all"
+							if filter_mode == "combat_only" and _is_banter(dialogue) then
+								should_add = false
+							elseif filter_mode == "banter_only" and not _is_banter(dialogue) then
+								should_add = false
 							end
-							if account_id then
-								self._in_game_subtitles[account_id] = dialogue.currently_playing_subtitle
+
+							if should_add then
+								local account_id = player:account_id()
+								if account_id and not table.find(current_active_dialogues, account_id) then
+									table.insert(current_active_dialogues, account_id)
+								end
+								if account_id then
+									self._in_game_subtitles[account_id] = dialogue.currently_playing_subtitle
+								end
 							end
 						end
 					end
