@@ -232,11 +232,41 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 
 	if mod:get("enable_voip") ~= false then
 		local show_self_voip = mod:get("show_self") ~= false
+		local voip_distance_threshold = mod:get("voip_distance") or 0
+		local local_pos = local_player and local_player.player_unit and Unit.alive(local_player.player_unit) and Unit.world_position(local_player.player_unit, 1)
+
 		for i = 1, #self._voip_speakers do
 			local account_id = self._voip_speakers[i]
 			local is_local = (local_player_id and account_id == local_player_id)
 			
-			if not is_local or show_self_voip then
+			local should_add = false
+
+			if is_local then
+				should_add = show_self_voip
+			else
+				local is_far_enough = true
+				if local_pos and voip_distance_threshold > 0 then
+					local players = Managers.player:players()
+					local speaker_player
+					for _, p in pairs(players) do
+						if p:account_id() == account_id then
+							speaker_player = p
+							break
+						end
+					end
+
+					if speaker_player and speaker_player.player_unit and Unit.alive(speaker_player.player_unit) then
+						local speaker_pos = Unit.world_position(speaker_player.player_unit, 1)
+						local distance = Vector3.distance(local_pos, speaker_pos)
+						if distance < voip_distance_threshold then
+							is_far_enough = false
+						end
+					end
+				end
+				should_add = is_far_enough
+			end
+			
+			if should_add then
 				if not table.find(voip_speakers, account_id) then
 					table.insert(voip_speakers, account_id)
 				end

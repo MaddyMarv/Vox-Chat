@@ -59,6 +59,12 @@ local loc = {
     vox_distance_description = {
         en = "How far away (in meters) a player must be for their in-game dialogue to trigger the vox popup.",
     },
+    voip_distance = {
+        en = "Voice Chat Distance Threshold",
+    },
+    voip_distance_description = {
+        en = "How far away (in meters) a player must be for their voice chat to trigger the vox popup. (0 = always show)",
+    },
     show_self_dialogue = {
         en = "Show Self (In-Game)",
     },
@@ -120,11 +126,17 @@ local loc = {
     subtitle_color_a = {
         en = "Opacity (0-255)",
     },
-    general_tab = {
-        en = "General",
+    voip_tab = {
+        en = "Voice Chat (VOIP)",
     },
     in_game_dialogue_tab = {
         en = "In-Game Dialogue",
+    },
+    appearance_tab = {
+        en = "Appearance & UI",
+    },
+    subtitles_tab = {
+        en = "Subtitles",
     },
     enable_voip = {
         en = "Enable Voice Chat Trigger",

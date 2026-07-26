@@ -7,10 +7,10 @@ return {
     options = {
         widgets = {
             {
-                setting_id = "general_settings",
+                setting_id = "voip_group",
                 type = "group",
-                title = "general_tab",
-                tab = mod:localize("general_tab"),
+                title = "voip_tab",
+                tab = mod:localize("voip_tab"),
                 sub_widgets = {
                     {
                         setting_id = "enable_voip",
@@ -27,12 +27,58 @@ return {
                         tooltip = "voip_priority_description",
                     },
                     {
+                        setting_id = "voip_distance",
+                        type = "numeric",
+                        default_value = 0,
+                        range = {0, 50},
+                        title = "voip_distance",
+                        tooltip = "voip_distance_description",
+                    },
+                    {
                         setting_id = "show_self",
                         type = "checkbox",
                         default_value = true,
                         title = "show_self",
                         tooltip = "show_self_description",
                     },
+                }
+            },
+            {
+                setting_id = "in_game_dialogue_group",
+                type = "group",
+                title = "in_game_dialogue_tab",
+                tab = mod:localize("in_game_dialogue_tab"),
+                sub_widgets = {
+                    {
+                        setting_id = "in_game_dialogue",
+                        type = "checkbox",
+                        default_value = false,
+                        title = "in_game_dialogue",
+                        tooltip = "in_game_dialogue_description",
+                    },
+                    {
+                        setting_id = "vox_distance",
+                        type = "numeric",
+                        default_value = 15,
+                        range = {0, 50},
+                        title = "vox_distance",
+                        tooltip = "vox_distance_description",
+                    },
+                    {
+                        setting_id = "show_self_dialogue",
+                        type = "checkbox",
+                        default_value = true,
+                        title = "show_self_dialogue",
+                        tooltip = "show_self_dialogue_description",
+                    },
+                }
+            },
+            {
+                setting_id = "appearance_group",
+                type = "group",
+                title = "appearance_tab",
+                tab = mod:localize("appearance_tab"),
+                sub_widgets = {
                     {
                         setting_id = "alignment",
                         type = "dropdown",
@@ -66,33 +112,11 @@ return {
                 }
             },
             {
-                setting_id = "in_game_dialogue_group",
+                setting_id = "subtitles_group",
                 type = "group",
-                title = "in_game_dialogue_tab",
-                tab = mod:localize("in_game_dialogue_tab"),
+                title = "subtitles_tab",
+                tab = mod:localize("subtitles_tab"),
                 sub_widgets = {
-                    {
-                        setting_id = "in_game_dialogue",
-                        type = "checkbox",
-                        default_value = false,
-                        title = "in_game_dialogue",
-                        tooltip = "in_game_dialogue_description",
-                    },
-                    {
-                        setting_id = "vox_distance",
-                        type = "numeric",
-                        default_value = 15,
-                        range = {0, 50},
-                        title = "vox_distance",
-                        tooltip = "vox_distance_description",
-                    },
-                    {
-                        setting_id = "show_self_dialogue",
-                        type = "checkbox",
-                        default_value = true,
-                        title = "show_self_dialogue",
-                        tooltip = "show_self_dialogue_description",
-                    },
                     {
                         setting_id = "show_subtitles",
                         type = "checkbox",
