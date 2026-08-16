@@ -114,17 +114,8 @@ local loc = {
         en = "Change the size of the subtitle text.",
     },
 
-    subtitle_color_r = {
-        en = "Red (0-255)",
-    },
-    subtitle_color_g = {
-        en = "Green (0-255)",
-    },
-    subtitle_color_b = {
-        en = "Blue (0-255)",
-    },
-    subtitle_color_a = {
-        en = "Opacity (0-255)",
+    subtitle_color = {
+        en = "Subtitle Color",
     },
     voip_tab = {
         en = "Voice Chat (VOIP)",

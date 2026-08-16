@@ -185,32 +185,10 @@ return {
                         tooltip = "subtitle_font_size_description",
                     },
                     {
-                        setting_id = "subtitle_color_r",
-                        type = "numeric",
-                        default_value = 241,
-                        range = {0, 255},
-                        title = "subtitle_color_r",
-                    },
-                    {
-                        setting_id = "subtitle_color_g",
-                        type = "numeric",
-                        default_value = 231,
-                        range = {0, 255},
-                        title = "subtitle_color_g",
-                    },
-                    {
-                        setting_id = "subtitle_color_b",
-                        type = "numeric",
-                        default_value = 163,
-                        range = {0, 255},
-                        title = "subtitle_color_b",
-                    },
-                    {
-                        setting_id = "subtitle_color_a",
-                        type = "numeric",
-                        default_value = 255,
-                        range = {0, 255},
-                        title = "subtitle_color_a",
+                        setting_id = "subtitle_color",
+                        type = "color",
+                        default_value = { 255, 241, 231, 163 },
+                        title = "subtitle_color",
                     },
                 }
             }

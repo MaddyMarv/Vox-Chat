@@ -519,10 +519,11 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 	local current_subtitle_offset_x = mod:get("subtitle_offset_x") or 0
 	local current_subtitle_offset_y = mod:get("subtitle_offset_y") or 95
 	local current_subtitle_font_size = mod:get("subtitle_font_size") or 24
-	local color_r = mod:get("subtitle_color_r") or 241
-	local color_g = mod:get("subtitle_color_g") or 231
-	local color_b = mod:get("subtitle_color_b") or 163
-	local color_a = mod:get("subtitle_color_a") or 255
+	local subtitle_color = mod:get("subtitle_color") or { 255, 241, 231, 163 }
+	local color_r = subtitle_color[2]
+	local color_g = subtitle_color[3]
+	local color_b = subtitle_color[4]
+	local color_a = subtitle_color[1]
 
 	if mod:get("alignment") ~= self._current_alignment
 		or current_subtitle_offset_x ~= self._current_subtitle_offset_x
@@ -855,11 +856,7 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 		local sub_font_size = mod:get("subtitle_font_size") or 24
 		
 		local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
-		local a = mod:get("subtitle_color_a") or 255
-		local r = mod:get("subtitle_color_r") or 241
-		local g = mod:get("subtitle_color_g") or 231
-		local b = mod:get("subtitle_color_b") or 163
-		local color_table = { a, r, g, b }
+		local color_table = mod:get("subtitle_color") or { 255, 241, 231, 163 }
 
 		local base_x = 0
 		subtitle_text.style.subtitle_text.horizontal_alignment = alignment
