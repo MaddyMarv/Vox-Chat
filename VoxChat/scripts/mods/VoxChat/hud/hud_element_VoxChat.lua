@@ -1,5 +1,5 @@
 local mod = get_mod("VoxChat")
-local Definitions = mod:io_dofile("VoxChat/scripts/mods/VoxChat/hud_element_VoxChat_definitions")
+local Definitions = mod:io_dofile("VoxChat/scripts/mods/VoxChat/hud/hud_element_VoxChat_definitions")
 
 local function utf8_sub(s, start_idx, end_idx)
     if not s or s == "" then return "" end

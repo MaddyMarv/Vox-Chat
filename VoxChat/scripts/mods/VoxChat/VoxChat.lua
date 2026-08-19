@@ -2,7 +2,7 @@ local mod = get_mod("VoxChat")
 
 mod:register_hud_element({
     class_name = "HudElementPlayerVoicePopup",
-    filename = "VoxChat/scripts/mods/VoxChat/hud_element_VoxChat",
+    filename = "VoxChat/scripts/mods/VoxChat/hud/hud_element_VoxChat",
     use_hud_scale = true,
     visibility_groups = {
         "alive",
