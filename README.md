@@ -3,4 +3,23 @@
 
 Standalone mod that pops up a character portrait when someone uses their mic. You can set it to show 3D faces, custom profile pictures (if you use the PFP mod), or the NPC TV screen style. It lets you pick if it shows up on the left or right side of the screen. You can also set it to only appear in missions so it doesn't clutter your screen in the Mourningstar.
 
+
+**Options:**
+- Enable Voice Chat Trigger
+- Prioritize Voice Chat
+- Voice Chat Distance Threshold
+- Show Options (Self, Self (In-Game), Subtitles)
+- Trigger on In-Game Dialogue
+- Dialogue Filter Mode [Show All (Default), Combat & Pings Only, Banter & Story Only]
+- Vox Distance Threshold
+- Alignment [Left, Right]
+- Portrait Style [Custom Picture (PFP Mod), 3d, NPC TV Screen]
+- Mission Only
+- Scroll Subtitles
+- Scroll Max Characters
+- Scroll Speed (Seconds)
+- Subtitle X/Y Offset
+- Subtitle Font Size
+- Subtitle Color
+
 🔗 **Links:** [Source Code](https://github.com/MaddyMarv/Vox-Chat) | [Nexus Mods Profile](https://www.nexusmods.com/profile/indicabunny) | [Support Me on Ko-fi](https://ko-fi.com/indicabunny)
