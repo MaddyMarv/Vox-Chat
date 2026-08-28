@@ -8,13 +8,17 @@ Standalone mod that pops up a character portrait when someone uses their mic. Yo
 - Enable Voice Chat Trigger
 - Prioritize Voice Chat
 - Voice Chat Distance Threshold
-- Show Options (Self, Self (In-Game), Subtitles)
+- Show Self
 - Trigger on In-Game Dialogue
 - Dialogue Filter Mode [Show All (Default), Combat & Pings Only, Banter & Story Only]
 - Vox Distance Threshold
+- Show Self (In-Game)
 - Alignment [Left, Right]
-- Portrait Style [Custom Picture (PFP Mod), 3d, NPC TV Screen]
+- Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
+- Max Visible Slots
+- HUD Scale
 - Mission Only
+- Show Subtitles
 - Scroll Subtitles
 - Scroll Max Characters
 - Scroll Speed (Seconds)
@@ -22,4 +26,4 @@ Standalone mod that pops up a character portrait when someone uses their mic. Yo
 - Subtitle Font Size
 - Subtitle Color
 
-🔗 **Links:** [Source Code](https://github.com/MaddyMarv/Vox-Chat) | [Nexus Mods Profile](https://www.nexusmods.com/profile/indicabunny) | [Support Me on Ko-fi](https://ko-fi.com/indicabunny)
+**Links:** [Source Code](https://github.com/MaddyMarv/Vox-Chat) | [Nexus Mods Profile](https://www.nexusmods.com/profile/indicabunny) | [Support Me on Ko-fi](https://ko-fi.com/indicabunny)
