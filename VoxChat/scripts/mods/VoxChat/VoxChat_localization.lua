@@ -32,6 +32,18 @@ local loc = {
     tv = {
         en = "NPC TV Screen",
     },
+    max_slots = {
+        en = "Max Visible Slots",
+    },
+    max_slots_description = {
+        en = "How many characters can show up on the screen at once (1 to 4). If set to 1, it only shows the latest speaker.",
+    },
+    hud_scale = {
+        en = "HUD Scale",
+    },
+    hud_scale_description = {
+        en = "Changes the size of the vox popups in real-time.",
+    },
     alignment = {
         en = "Alignment",
     },
@@ -57,7 +69,7 @@ local loc = {
         en = "Vox Distance Threshold",
     },
     vox_distance_description = {
-        en = "How far away (in meters) a player must be for their in-game dialogue to trigger the vox popup.",
+        en = "How far away (in meters) a player must be for their in-game dialogue to trigger the vox popup. (0 = always show)",
     },
     voip_distance = {
         en = "Voice Chat Distance Threshold",

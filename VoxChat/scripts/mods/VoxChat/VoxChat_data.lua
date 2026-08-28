@@ -71,7 +71,7 @@ return {
                     {
                         setting_id = "vox_distance",
                         type = "numeric",
-                        default_value = 15,
+                        default_value = 0,
                         range = {0, 50},
                         title = "vox_distance",
                         tooltip = "vox_distance_description",
@@ -113,6 +113,24 @@ return {
                         },
                         title = "portrait_style",
                         tooltip = "portrait_style_description",
+                    },
+                    {
+                        setting_id = "max_slots",
+                        type = "numeric",
+                        default_value = 2,
+                        range = {1, 4},
+                        title = "max_slots",
+                        tooltip = "max_slots_description",
+                    },
+                    {
+                        setting_id = "hud_scale",
+                        type = "numeric",
+                        default_value = 1.0,
+                        range = {0.5, 2.0},
+                        decimals_number = 2,
+                        step_size_value = 0.05,
+                        title = "hud_scale",
+                        tooltip = "hud_scale_description",
                     },
                     {
                         setting_id = "mission_only",
