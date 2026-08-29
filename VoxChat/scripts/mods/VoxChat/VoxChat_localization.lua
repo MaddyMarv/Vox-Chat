@@ -168,6 +168,24 @@ local loc = {
     filter_mode_banter_only = {
         en = "Banter & Story Only",
     },
+    name_display_format = {
+        en = "Name Display Format",
+    },
+    name_display_format_description = {
+        en = "Choose how the speaker's name is displayed.",
+    },
+    format_character = {
+        en = "Character Name",
+    },
+    format_account = {
+        en = "Account Name",
+    },
+    format_character_account = {
+        en = "Character (Account)",
+    },
+    format_account_character = {
+        en = "Account (Character)",
+    },
 }
 
 return loc

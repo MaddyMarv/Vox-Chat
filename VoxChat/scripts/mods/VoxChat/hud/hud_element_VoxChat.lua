@@ -682,12 +682,32 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, slot, accoun
 		end
 	end
 
-	local fallback_name = "Unknown"
 	local cached_participant = self._participant_cache[account_id]
+	local account_name = nil
+
+	if player_info then
+		account_name = player_info:user_display_name()
+	elseif cached_participant then
+		account_name = cached_participant.account_name
+	end
+
+	local fallback_name = "Unknown"
 	if cached_participant then
 		fallback_name = cached_participant.character_name or cached_participant.account_name or "Unknown"
 	end
-	name = name or fallback_name
+	local character_name = name or fallback_name
+	name = character_name
+
+	if account_name and character_name then
+		local format = mod:get("name_display_format") or "character"
+		if format == "account" then
+			name = account_name
+		elseif format == "character_account" then
+			name = character_name .. " (" .. account_name .. ")"
+		elseif format == "account_character" then
+			name = account_name .. " (" .. character_name .. ")"
+		end
+	end
 
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name["name_text_"..slot].content.name_text = name

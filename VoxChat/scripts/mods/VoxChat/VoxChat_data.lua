@@ -139,6 +139,19 @@ return {
                         title = "mission_only",
                         tooltip = "mission_only_description",
                     },
+                    {
+                        setting_id = "name_display_format",
+                        type = "dropdown",
+                        default_value = "character",
+                        options = {
+                            { text = "format_character", value = "character" },
+                            { text = "format_account", value = "account" },
+                            { text = "format_character_account", value = "character_account" },
+                            { text = "format_account_character", value = "account_character" },
+                        },
+                        title = "name_display_format",
+                        tooltip = "name_display_format_description",
+                    },
                 }
             },
             {
