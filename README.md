@@ -21,7 +21,7 @@ Standalone mod that pops up a character portrait when someone uses their mic. Yo
 - Mission Only
 - VOIP Name Format [Character Name, Account Name, Character (Account), Account (Character)]
 - In-Game Name Format [Character Name, Account Name, Character (Account), Account (Character)]
-- Slot 1-4 X/Y Offsets (Custom Positions)
+- Slot 1-4 X/Y Offsets
 - Show Subtitles
 - Scroll Subtitles
 - Scroll Max Characters
