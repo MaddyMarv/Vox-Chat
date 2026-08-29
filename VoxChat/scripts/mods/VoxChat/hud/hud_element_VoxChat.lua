@@ -952,8 +952,6 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 		if ui_scenegraph and ui_scenegraph["background_"..slot] then
 			local node = ui_scenegraph["background_"..slot]
 			node.horizontal_alignment = alignment
-			node.position[1] = is_left and (50 * hud_scale) or -(50 * hud_scale)
-			node.position[2] = (300 * hud_scale) + (slot - 1) * slot_spacing_y
 			node.size[1] = portrait_size[1]
 			node.size[2] = portrait_size[2]
 		end

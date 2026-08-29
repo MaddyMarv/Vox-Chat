@@ -17,15 +17,24 @@ local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 }
 
+local default_positions = {
+	{ 50, 300 },
+	{ 50, 440 },
+	{ 50, 580 },
+	{ 50, 720 },
+}
+
 for i = 1, MAX_SLOTS do
+	local slot_x = mod and mod:get("slot_" .. i .. "_x") or default_positions[i][1]
+	local slot_y = mod and mod:get("slot_" .. i .. "_y") or default_positions[i][2]
 	scenegraph_definition["background_"..i] = {
 		horizontal_alignment = "left",
 		parent = "screen",
 		vertical_alignment = "top",
 		size = portrait_size,
 		position = {
-			50 * hud_scale,
-			(300 * hud_scale) + (i - 1) * slot_spacing_y,
+			slot_x * hud_scale,
+			slot_y * hud_scale,
 			20,
 		},
 	}

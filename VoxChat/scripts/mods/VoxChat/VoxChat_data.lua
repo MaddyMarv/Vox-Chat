@@ -180,6 +180,106 @@ return {
                 }
             },
             {
+                setting_id = "positions_group",
+                type = "group",
+                title = "positions_tab",
+                tab = mod:localize("positions_tab"),
+                sub_widgets = {
+                    {
+                        setting_id = "slot_1_group",
+                        type = "group",
+                        title = "slot_1_header",
+                        sub_widgets = {
+                            {
+                                setting_id = "slot_1_x",
+                                type = "numeric",
+                                default_value = 50,
+                                range = {-2000, 2000},
+                                title = "slot_1_x",
+                                tooltip = "slot_1_x_description",
+                            },
+                            {
+                                setting_id = "slot_1_y",
+                                type = "numeric",
+                                default_value = 300,
+                                range = {-2000, 2000},
+                                title = "slot_1_y",
+                                tooltip = "slot_1_y_description",
+                            },
+                        }
+                    },
+                    {
+                        setting_id = "slot_2_group",
+                        type = "group",
+                        title = "slot_2_header",
+                        sub_widgets = {
+                            {
+                                setting_id = "slot_2_x",
+                                type = "numeric",
+                                default_value = 50,
+                                range = {-2000, 2000},
+                                title = "slot_2_x",
+                                tooltip = "slot_2_x_description",
+                            },
+                            {
+                                setting_id = "slot_2_y",
+                                type = "numeric",
+                                default_value = 440,
+                                range = {-2000, 2000},
+                                title = "slot_2_y",
+                                tooltip = "slot_2_y_description",
+                            },
+                        }
+                    },
+                    {
+                        setting_id = "slot_3_group",
+                        type = "group",
+                        title = "slot_3_header",
+                        sub_widgets = {
+                            {
+                                setting_id = "slot_3_x",
+                                type = "numeric",
+                                default_value = 50,
+                                range = {-2000, 2000},
+                                title = "slot_3_x",
+                                tooltip = "slot_3_x_description",
+                            },
+                            {
+                                setting_id = "slot_3_y",
+                                type = "numeric",
+                                default_value = 580,
+                                range = {-2000, 2000},
+                                title = "slot_3_y",
+                                tooltip = "slot_3_y_description",
+                            },
+                        }
+                    },
+                    {
+                        setting_id = "slot_4_group",
+                        type = "group",
+                        title = "slot_4_header",
+                        sub_widgets = {
+                            {
+                                setting_id = "slot_4_x",
+                                type = "numeric",
+                                default_value = 50,
+                                range = {-2000, 2000},
+                                title = "slot_4_x",
+                                tooltip = "slot_4_x_description",
+                            },
+                            {
+                                setting_id = "slot_4_y",
+                                type = "numeric",
+                                default_value = 720,
+                                range = {-2000, 2000},
+                                title = "slot_4_y",
+                                tooltip = "slot_4_y_description",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 setting_id = "subtitles_group",
                 type = "group",
                 title = "subtitles_tab",
