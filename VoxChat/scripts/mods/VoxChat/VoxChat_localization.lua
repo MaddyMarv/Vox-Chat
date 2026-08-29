@@ -17,11 +17,17 @@ local loc = {
     mission_only_description = {
         en = "Only show the voice popup during active missions.",
     },
-    portrait_style = {
-        en = "Portrait Style",
+    voip_portrait_style = {
+        en = "VOIP Portrait Style",
     },
-    portrait_style_description = {
-        en = "Choose how the character portrait is displayed.",
+    voip_portrait_style_description = {
+        en = "Choose how the character portrait is displayed for voice chat.",
+    },
+    dialogue_portrait_style = {
+        en = "In-Game Portrait Style",
+    },
+    dialogue_portrait_style_description = {
+        en = "Choose how the character portrait is displayed for in-game dialogue.",
     },
     pfp = {
         en = "Custom Picture (PFP Mod)",
@@ -168,11 +174,17 @@ local loc = {
     filter_mode_banter_only = {
         en = "Banter & Story Only",
     },
-    name_display_format = {
-        en = "Name Display Format",
+    voip_name_display_format = {
+        en = "VOIP Name Format",
     },
-    name_display_format_description = {
-        en = "Choose how the speaker's name is displayed.",
+    voip_name_display_format_description = {
+        en = "Choose how the speaker's name is displayed for voice chat (VOIP).",
+    },
+    dialogue_name_display_format = {
+        en = "In-Game Name Format",
+    },
+    dialogue_name_display_format_description = {
+        en = "Choose how the speaker's name is displayed for in-game dialogue.",
     },
     format_character = {
         en = "Character Name",

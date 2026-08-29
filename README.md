@@ -14,10 +14,13 @@ Standalone mod that pops up a character portrait when someone uses their mic. Yo
 - Vox Distance Threshold
 - Show Self (In-Game)
 - Alignment [Left, Right]
-- Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
+- VOIP Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
+- In-Game Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
 - Max Visible Slots
 - HUD Scale
 - Mission Only
+- VOIP Name Format [Character Name, Account Name, Character (Account), Account (Character)]
+- In-Game Name Format [Character Name, Account Name, Character (Account), Account (Character)]
 - Show Subtitles
 - Scroll Subtitles
 - Scroll Max Characters

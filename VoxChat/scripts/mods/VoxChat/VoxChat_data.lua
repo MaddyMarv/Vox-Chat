@@ -103,16 +103,28 @@ return {
                         tooltip = "alignment_description",
                     },
                     {
-                        setting_id = "portrait_style",
+                        setting_id = "voip_portrait_style",
                         type = "dropdown",
-                        default_value = "pfp",
+                        default_value = "3d",
                         options = {
                             { text = "pfp", value = "pfp" },
                             { text = "3d", value = "3d" },
                             { text = "tv", value = "tv" },
                         },
-                        title = "portrait_style",
-                        tooltip = "portrait_style_description",
+                        title = "voip_portrait_style",
+                        tooltip = "voip_portrait_style_description",
+                    },
+                    {
+                        setting_id = "dialogue_portrait_style",
+                        type = "dropdown",
+                        default_value = "3d",
+                        options = {
+                            { text = "pfp", value = "pfp" },
+                            { text = "3d", value = "3d" },
+                            { text = "tv", value = "tv" },
+                        },
+                        title = "dialogue_portrait_style",
+                        tooltip = "dialogue_portrait_style_description",
                     },
                     {
                         setting_id = "max_slots",
@@ -140,7 +152,7 @@ return {
                         tooltip = "mission_only_description",
                     },
                     {
-                        setting_id = "name_display_format",
+                        setting_id = "voip_name_display_format",
                         type = "dropdown",
                         default_value = "character",
                         options = {
@@ -149,8 +161,21 @@ return {
                             { text = "format_character_account", value = "character_account" },
                             { text = "format_account_character", value = "account_character" },
                         },
-                        title = "name_display_format",
-                        tooltip = "name_display_format_description",
+                        title = "voip_name_display_format",
+                        tooltip = "voip_name_display_format_description",
+                    },
+                    {
+                        setting_id = "dialogue_name_display_format",
+                        type = "dropdown",
+                        default_value = "character",
+                        options = {
+                            { text = "format_character", value = "character" },
+                            { text = "format_account", value = "account" },
+                            { text = "format_character_account", value = "character_account" },
+                            { text = "format_account_character", value = "account_character" },
+                        },
+                        title = "dialogue_name_display_format",
+                        tooltip = "dialogue_name_display_format_description",
                     },
                 }
             },
