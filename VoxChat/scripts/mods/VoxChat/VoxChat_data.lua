@@ -105,7 +105,7 @@ return {
                     {
                         setting_id = "voip_portrait_style",
                         type = "dropdown",
-                        default_value = "3d",
+                        default_value = "pfp",
                         options = {
                             { text = "pfp", value = "pfp" },
                             { text = "3d", value = "3d" },
@@ -154,7 +154,7 @@ return {
                     {
                         setting_id = "voip_name_display_format",
                         type = "dropdown",
-                        default_value = "character",
+                        default_value = "account",
                         options = {
                             { text = "format_character", value = "character" },
                             { text = "format_account", value = "account" },

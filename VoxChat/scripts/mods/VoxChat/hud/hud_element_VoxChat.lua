@@ -703,7 +703,7 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, slot, accoun
 		if is_dialogue then
 			format = mod:get("dialogue_name_display_format") or "character"
 		else
-			format = mod:get("voip_name_display_format") or "character"
+			format = mod:get("voip_name_display_format") or "account"
 		end
 		if format == "account" then
 			name = account_name
@@ -733,11 +733,11 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, slot, accoun
 		widgets_by_name["subtitle_text_"..slot].content.subtitle_text = ""
 	end
 
-	local style = "3d"
+	local style = "pfp"
 	if is_dialogue then
 		style = mod:get("dialogue_portrait_style") or "3d"
 	else
-		style = mod:get("voip_portrait_style") or "3d"
+		style = mod:get("voip_portrait_style") or "pfp"
 	end
 	local pfp_mod = get_mod("ProfilePictures")
 
