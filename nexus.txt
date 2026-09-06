@@ -28,4 +28,5 @@ Standalone mod that pops up a character portrait when someone uses their mic. Yo
 - Show & Scroll Subtitles (Scroll Speed, Max Characters)
 - Subtitle Customization (Font Size, Color, X/Y Offset)
 
-[b]Links:[/b] [url=https://github.com/MaddyMarv/Vox-Chat]Source Code[/url] | [url=https://www.nexusmods.com/profile/indicabunny]Nexus Mods Profile[/url] | [url=https://ko-fi.com/indicabunny]Support Me on Ko-fi[/url]
+[b]Links:[/b]
+[url=https://github.com/MaddyMarv/Vox-Chat]Source Code[/url] | [url=https://www.nexusmods.com/profile/indicabunny]Nexus Mods Profile[/url] | [url=https://ko-fi.com/indicabunny]Support Me on Ko-fi[/url]
