@@ -1,4 +1,4 @@
-Displays a character portrait when someone speaks over voice chat. Supports 3D operative faces, PFP mod avatars, or NPC holo style.
+Displays a character portrait when someone speaks over voice chat. Supports 3D operative faces, PFP mod avatars, or NPC TV icon style.
 
 [b]Options:[/b]
 

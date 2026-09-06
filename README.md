@@ -1,7 +1,7 @@
 ### [Vox Chat (Player Voice Popup)](https://www.nexusmods.com/warhammer40kdarktide/mods/1030)
 <img width="404" height="218" alt="image" src="https://github.com/user-attachments/assets/0302c1f3-9b73-48ca-91e6-36c2664e7a86" />
 
-Displays a character portrait when someone speaks over voice chat. Supports 3D operative faces, PFP mod avatars, or NPC holo style.
+Displays a character portrait when someone speaks over voice chat. Supports 3D operative faces, PFP mod avatars, or NPC TV icon style.
 
 **Options:**
 
