@@ -3,7 +3,7 @@ local loc = {
         en = "VoxChat",
     },
     mod_description = {
-        en = "Shows a speaker popup with character portraits when players use voice chat.",
+        en = "Displays a character portrait when someone speaks over voice chat. Supports 3D operative faces, PFP mod avatars, or NPC holo style.",
     },
     show_self = {
         en = "Show Self",
