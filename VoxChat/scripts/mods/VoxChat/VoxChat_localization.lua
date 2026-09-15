@@ -402,29 +402,69 @@ local loc = {
     format_account_character = {
         en = "Account (Character)",
     },
-    slot_1_x = { en = "Slot 1 X Offset" },
-    slot_1_x_description = { en = "Horizontal position for the first speaker." },
-    slot_1_y = { en = "Slot 1 Y Offset" },
-    slot_1_y_description = { en = "Vertical position for the first speaker." },
+    slot_1_x = { 
+        en = "Slot 1 X Offset" 
+    },
+    slot_1_x_description = { 
+        en = "Horizontal position for the first speaker." 
+    },
+    slot_1_y = { 
+        en = "Slot 1 Y Offset" }
+    ,
+    slot_1_y_description = { 
+        en = "Vertical position for the first speaker." 
+    },
     
-    slot_2_x = { en = "Slot 2 X Offset" },
-    slot_2_x_description = { en = "Horizontal position for the second speaker." },
-    slot_2_y = { en = "Slot 2 Y Offset" },
-    slot_2_y_description = { en = "Vertical position for the second speaker." },
+    slot_2_x = { 
+        en = "Slot 2 X Offset" 
+    },
+    slot_2_x_description = { 
+        en = "Horizontal position for the second speaker." 
+    },
+    slot_2_y = { 
+        en = "Slot 2 Y Offset" 
+    },
+    slot_2_y_description = { 
+        en = "Vertical position for the second speaker." 
+    },
     
-    slot_3_x = { en = "Slot 3 X Offset" },
-    slot_3_x_description = { en = "Horizontal position for the third speaker." },
-    slot_3_y = { en = "Slot 3 Y Offset" },
-    slot_3_y_description = { en = "Vertical position for the third speaker." },
+    slot_3_x = { 
+        en = "Slot 3 X Offset" 
+    },
+    slot_3_x_description = { 
+        en = "Horizontal position for the third speaker." 
+    },
+    slot_3_y = { 
+        en = "Slot 3 Y Offset" 
+    },
+    slot_3_y_description = { 
+        en = "Vertical position for the third speaker." 
+    },
     
-    slot_4_x = { en = "Slot 4 X Offset" },
-    slot_4_x_description = { en = "Horizontal position for the fourth speaker." },
-    slot_4_y = { en = "Slot 4 Y Offset" },
-    slot_4_y_description = { en = "Vertical position for the fourth speaker." },
-    slot_1_header = { en = "Speaker Slot 1" },
-    slot_2_header = { en = "Speaker Slot 2" },
-    slot_3_header = { en = "Speaker Slot 3" },
-    slot_4_header = { en = "Speaker Slot 4" },
+    slot_4_x = { 
+        en = "Slot 4 X Offset" 
+    },
+    slot_4_x_description = {
+        en = "Horizontal position for the fourth speaker." 
+    },
+    slot_4_y = { 
+        en = "Slot 4 Y Offset" 
+    },
+    slot_4_y_description = { 
+        en = "Vertical position for the fourth speaker." 
+    },
+    slot_1_header = { 
+        en = "Speaker Slot 1" 
+    },
+    slot_2_header = { 
+        en = "Speaker Slot 2" 
+    },
+    slot_3_header = { 
+        en = "Speaker Slot 3" 
+    },
+    slot_4_header = { 
+        en = "Speaker Slot 4" 
+    },
 }
 
 return loc
