@@ -3,7 +3,8 @@
 
 Displays a character portrait when someone speaks over voice chat. Supports 3D operative faces, PFP mod avatars, or NPC TV icon style.
 
-**Options:**
+<details>
+<summary><b>Mod Settings / Commands</b></summary>
 
 **Voice Chat (VOIP)**
 - Enable Voice Chat Trigger & Priority
@@ -30,5 +31,6 @@ Displays a character portrait when someone speaks over voice chat. Supports 3D o
 **Subtitles**
 - Show & Scroll Subtitles (Scroll Speed, Max Characters)
 - Subtitle Customization (Font Size, Color, X/Y Offset)
+</details>
 
 🔗 **Links:** [Source Code](https://github.com/MaddyMarv/Vox-Chat) | [Nexus Mods Profile](https://www.nexusmods.com/profile/indicabunny) | [Support Me on Ko-fi](https://ko-fi.com/indicabunny)
