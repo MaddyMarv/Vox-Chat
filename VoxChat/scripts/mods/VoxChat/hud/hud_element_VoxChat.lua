@@ -4,176 +4,240 @@ local Definitions = mod:io_dofile("VoxChat/scripts/mods/VoxChat/hud/hud_element_
 local MAX_SLOTS = Definitions.max_slots or 4
 
 local function utf8_sub(s, start_idx, end_idx)
-    if not s or s == "" then return "" end
-    local chars = {}
-    for char in string.gmatch(s, "[%z\1-\127\194-\244][\128-\191]*") do
-        table.insert(chars, char)
-    end
-    local len = #chars
-    if start_idx < 1 then start_idx = 1 end
-    if end_idx > len then end_idx = len end
-    if start_idx > end_idx then return "" end
-    return table.concat(chars, "", start_idx, end_idx)
+	if not s or s == "" then
+		return ""
+	end
+	local chars = {}
+	for char in string.gmatch(s, "[%z\1-\127\194-\244][\128-\191]*") do
+		table.insert(chars, char)
+	end
+	local len = #chars
+	if start_idx < 1 then
+		start_idx = 1
+	end
+	if end_idx > len then
+		end_idx = len
+	end
+	if start_idx > end_idx then
+		return ""
+	end
+	return table.concat(chars, "", start_idx, end_idx)
 end
 
 local function utf8_len(s)
-    if not s or s == "" then return 0 end
-    local count = 0
-    for _ in string.gmatch(s, "[%z\1-\127\194-\244][\128-\191]*") do
-        count = count + 1
-    end
-    return count
+	if not s or s == "" then
+		return 0
+	end
+	local count = 0
+	for _ in string.gmatch(s, "[%z\1-\127\194-\244][\128-\191]*") do
+		count = count + 1
+	end
+	return count
 end
 
 local PLAYER_COM_WHEEL_CONCEPT_FRAGMENTS = {
-    "on_demand_com_wheel",
-    "on_demand_vo_tag_enemy",
-    "on_demand_vo_tag_item",
-    "smart_tag",
-    "tag_item",
-    "tag_enemy",
-    "look_at",
+	"on_demand_com_wheel",
+	"on_demand_vo_tag_enemy",
+	"on_demand_vo_tag_item",
+	"smart_tag",
+	"tag_item",
+	"tag_enemy",
+	"look_at",
 }
 
 local PLAYER_COMBAT_CONCEPT_FRAGMENTS = {
-    "combat_ability",
-    "enemy_kill",
-    "heard_enemy",
-    "heard_horde",
-    "higher_elite_threat",
-    "interaction_vo",
-    "knocked_down",
-    "player_death",
-    "player_enemy_alert",
-    "seen_enemy_group_far_range_shooting_behind_cover",
-    "seen_enemy",
-    "seen_horde",
-    "throwing_item",
-    "throwing_net",
-    "warning",
-    "catching_net",
-    "heal_start",
-    "ledge_hanging",
-    "pounced_by_special_attack",
-    "rapid_loosing_health",
-    "friends_close",
-    "friends_distant",
-    "heat_vo",
-    "ranged_idle_player_out_of_ammo",
-    "reload_failed",
-    "reloading",
-    "pinned_by_enemies",
+	"combat_ability",
+	"enemy_kill",
+	"heard_enemy",
+	"heard_horde",
+	"higher_elite_threat",
+	"interaction_vo",
+	"knocked_down",
+	"player_death",
+	"player_enemy_alert",
+	"seen_enemy_group_far_range_shooting_behind_cover",
+	"seen_enemy",
+	"seen_horde",
+	"throwing_item",
+	"throwing_net",
+	"warning",
+	"catching_net",
+	"heal_start",
+	"ledge_hanging",
+	"pounced_by_special_attack",
+	"rapid_loosing_health",
+	"friends_close",
+	"friends_distant",
+	"heat_vo",
+	"ranged_idle_player_out_of_ammo",
+	"reload_failed",
+	"reloading",
+	"pinned_by_enemies",
 }
 
 local PLAYER_SOCIAL_CONCEPT_FRAGMENTS = {
-    "confessional_vo",
-    "enemy_near_death_monster",
-    "environmental_story",
-    "friendly_fire",
-    "head_shot",
-    "health_hog",
-    "heard_speak",
-    "kill_spree_self",
-    "knocked_down_multiple_times",
-    "multiple_head_pops",
-    "player_tip_armor_hit",
-    "short_story_talk",
-    "start_banter",
-    "story_talk",
-    "combat_story_talk",
-    "cutscene_vo_line",
-    "ammo_hog",
-    "seen_killstreak_",
+	"confessional_vo",
+	"enemy_near_death_monster",
+	"environmental_story",
+	"friendly_fire",
+	"head_shot",
+	"health_hog",
+	"heard_speak",
+	"kill_spree_self",
+	"knocked_down_multiple_times",
+	"multiple_head_pops",
+	"player_tip_armor_hit",
+	"short_story_talk",
+	"start_banter",
+	"story_talk",
+	"combat_story_talk",
+	"cutscene_vo_line",
+	"ammo_hog",
+	"seen_killstreak_",
 }
 
 local function _contains(value, fragment)
-    return type(value) == "string" and type(fragment) == "string" and string.find(value, fragment, 1, true) ~= nil
+	return type(value) == "string" and type(fragment) == "string" and string.find(value, fragment, 1, true) ~= nil
 end
 
 local function _contains_any(value, fragments)
-    if type(value) ~= "string" or value == "" or type(fragments) ~= "table" then
-        return false
-    end
-    for i = 1, #fragments do
-        if _contains(value, fragments[i]) then
-            return true
-        end
-    end
-    return false
+	if type(value) ~= "string" or value == "" or type(fragments) ~= "table" then
+		return false
+	end
+	for i = 1, #fragments do
+		if _contains(value, fragments[i]) then
+			return true
+		end
+	end
+	return false
 end
 
 local function _starts_with_any(value, prefixes)
-    if type(value) ~= "string" or value == "" or type(prefixes) ~= "table" then
-        return false
-    end
-    for i = 1, #prefixes do
-        if string.find(value, prefixes[i], 1, true) == 1 then
-            return true
-        end
-    end
-    return false
+	if type(value) ~= "string" or value == "" or type(prefixes) ~= "table" then
+		return false
+	end
+	for i = 1, #prefixes do
+		if string.find(value, prefixes[i], 1, true) == 1 then
+			return true
+		end
+	end
+	return false
 end
 
 local function _classify_explicit_player_concept(identifier)
-    if _contains_any(identifier, PLAYER_COM_WHEEL_CONCEPT_FRAGMENTS) then return "com_wheel" end
-    if _contains_any(identifier, PLAYER_SOCIAL_CONCEPT_FRAGMENTS) then return "social" end
-    if _contains_any(identifier, PLAYER_COMBAT_CONCEPT_FRAGMENTS) then return "combat" end
-    return nil
+	if _contains_any(identifier, PLAYER_COM_WHEEL_CONCEPT_FRAGMENTS) then
+		return "com_wheel"
+	end
+	if _contains_any(identifier, PLAYER_SOCIAL_CONCEPT_FRAGMENTS) then
+		return "social"
+	end
+	if _contains_any(identifier, PLAYER_COMBAT_CONCEPT_FRAGMENTS) then
+		return "combat"
+	end
+	return nil
 end
 
 local function _is_player_explicit_social_event(identifier)
-    if _contains(identifier, "conversation") then return true end
-    if _contains(identifier, "bonding") then return true end
-    if _contains(identifier, "reply") and not _contains(identifier, "no_reply") then return true end
-    return false
+	if _contains(identifier, "conversation") then
+		return true
+	end
+	if _contains(identifier, "bonding") then
+		return true
+	end
+	if _contains(identifier, "reply") and not _contains(identifier, "no_reply") then
+		return true
+	end
+	return false
 end
 
 local function _is_player_combat_event(identifier)
-    if _starts_with_any(identifier, {
-            "player_death", "team_downed", "player_ability", "player_kill", "player_horde",
-            "player_throw", "team_warning", "team_hacking", "team_monster", "player_blitz",
-            "seen_netgunner", "seen_enemy_",
-        }) then
-        return true
-    end
+	if
+		_starts_with_any(identifier, {
+			"player_death",
+			"team_downed",
+			"player_ability",
+			"player_kill",
+			"player_horde",
+			"player_throw",
+			"team_warning",
+			"team_hacking",
+			"team_monster",
+			"player_blitz",
+			"seen_netgunner",
+			"seen_enemy_",
+		})
+	then
+		return true
+	end
 
-    if _contains_any(identifier, {
-            "ability", "blitz", "throwing_grenade", "enemy_daemonhost", "event_scan",
-            "luggable", "warning_exploding_barrel", "critical_health", "response_to_hacking_fix_decode",
-            "hacking_fix_decode", "monster_fight_start_reaction", "disabled_by_enemy", "need_rescue",
-            "disabled_by_chaos_hound", "response_for_pinned_by_enemies", "_kill",
-        }) then
-        return true
-    end
+	if
+		_contains_any(identifier, {
+			"ability",
+			"blitz",
+			"throwing_grenade",
+			"enemy_daemonhost",
+			"event_scan",
+			"luggable",
+			"warning_exploding_barrel",
+			"critical_health",
+			"response_to_hacking_fix_decode",
+			"hacking_fix_decode",
+			"monster_fight_start_reaction",
+			"disabled_by_enemy",
+			"need_rescue",
+			"disabled_by_chaos_hound",
+			"response_for_pinned_by_enemies",
+			"_kill",
+		})
+	then
+		return true
+	end
 
-    return false
+	return false
 end
 
 local function _is_banter(dialogue)
-	local identifier = dialogue.concept or dialogue.dialogue_name or dialogue.dialogue_event_name or dialogue.currently_playing_subtitle or dialogue.category or dialogue.sound_event
-	if not identifier or type(identifier) ~= "string" then return false end
-	
-    local explicit = _classify_explicit_player_concept(identifier)
-    if explicit == "social" then return true end
-    if explicit == "com_wheel" or explicit == "combat" then return false end
-    
-    if _contains(identifier, "com_wheel_vo") then return false end
-    if _is_player_explicit_social_event(identifier) then return true end
-    if _is_player_combat_event(identifier) then return false end
-    
-    return true
+	local identifier = dialogue.concept
+		or dialogue.dialogue_name
+		or dialogue.dialogue_event_name
+		or dialogue.currently_playing_subtitle
+		or dialogue.category
+		or dialogue.sound_event
+	if not identifier or type(identifier) ~= "string" then
+		return false
+	end
+
+	local explicit = _classify_explicit_player_concept(identifier)
+	if explicit == "social" then
+		return true
+	end
+	if explicit == "com_wheel" or explicit == "combat" then
+		return false
+	end
+
+	if _contains(identifier, "com_wheel_vo") then
+		return false
+	end
+	if _is_player_explicit_social_event(identifier) then
+		return true
+	end
+	if _is_player_combat_event(identifier) then
+		return false
+	end
+
+	return true
 end
 
 local HudElementPlayerVoicePopup = class("HudElementPlayerVoicePopup", "HudElementBase")
 
-HudElementPlayerVoicePopup.init = function (self, parent, draw_layer, start_scale)
+HudElementPlayerVoicePopup.init = function(self, parent, draw_layer, start_scale)
 	HudElementPlayerVoicePopup.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	local num_bars = Definitions.bar_amount
 	local bar_offset = Definitions.bar_offset
 	local bar_size = Definitions.bar_size
 	local bar_spacing = Definitions.bar_spacing
-	
+
 	self._bar_widgets = {}
 	for slot = 1, MAX_SLOTS do
 		self._bar_widgets[slot] = {}
@@ -199,7 +263,7 @@ HudElementPlayerVoicePopup.init = function (self, parent, draw_layer, start_scal
 	self._incoming_dots_counts = {}
 	self._previous_bar_indices = {}
 	self._bar_timers = {}
-	
+
 	self._voip_speakers = {}
 	self._dialogue_speakers = {}
 	self._participant_cache = {}
@@ -232,19 +296,19 @@ HudElementPlayerVoicePopup.init = function (self, parent, draw_layer, start_scal
 	Managers.event:register(self, "chat_manager_participant_removed", "_chat_manager_participant_removed")
 end
 
-HudElementPlayerVoicePopup.destroy = function (self, ui_renderer)
+HudElementPlayerVoicePopup.destroy = function(self, ui_renderer)
 	Managers.event:unregister(self, "chat_manager_participant_update")
 	Managers.event:unregister(self, "chat_manager_participant_removed")
-	
+
 	for slot = 1, MAX_SLOTS do
 		self:_unload_portrait_icon(slot)
 		self:_unload_portrait_frame(slot)
 	end
-	
+
 	HudElementPlayerVoicePopup.super.destroy(self, ui_renderer)
 end
 
-HudElementPlayerVoicePopup._chat_manager_participant_update = function (self, channel_handle, participant)
+HudElementPlayerVoicePopup._chat_manager_participant_update = function(self, channel_handle, participant)
 	local is_speaking = participant.is_speaking
 	local account_id = participant.account_id
 
@@ -262,7 +326,12 @@ HudElementPlayerVoicePopup._chat_manager_participant_update = function (self, ch
 	self._participant_cache[account_id] = participant
 end
 
-HudElementPlayerVoicePopup._chat_manager_participant_removed = function (self, channel_handle, participant_uri, participant)
+HudElementPlayerVoicePopup._chat_manager_participant_removed = function(
+	self,
+	channel_handle,
+	participant_uri,
+	participant
+)
 	local account_id = participant and participant.account_id
 	if account_id then
 		local index = table.find(self._voip_speakers, account_id)
@@ -272,7 +341,7 @@ HudElementPlayerVoicePopup._chat_manager_participant_removed = function (self, c
 	end
 end
 
-HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_settings, input_service)
+HudElementPlayerVoicePopup.update = function(self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementPlayerVoicePopup.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 
 	local current_speakers = {}
@@ -289,7 +358,10 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 		local dialogue_system = Managers.state.extension and Managers.state.extension:system("dialogue_system")
 		if dialogue_system and dialogue_system.playing_dialogues_array then
 			local playing_dialogues = dialogue_system:playing_dialogues_array()
-			local local_pos = local_player and local_player.player_unit and Unit.alive(local_player.player_unit) and Unit.world_position(local_player.player_unit, 1)
+			local local_pos = local_player
+				and local_player.player_unit
+				and Unit.alive(local_player.player_unit)
+				and Unit.world_position(local_player.player_unit, 1)
 			local distance_threshold = mod:get("vox_distance") or 0
 
 			local current_active_dialogues = {}
@@ -341,21 +413,21 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 					end
 				end
 			end
-			
+
 			for i = 1, #current_active_dialogues do
 				local id = current_active_dialogues[i]
 				if not table.find(self._dialogue_speakers, id) then
 					table.insert(self._dialogue_speakers, id)
 				end
 			end
-			
+
 			for i = #self._dialogue_speakers, 1, -1 do
 				local id = self._dialogue_speakers[i]
 				if not table.find(current_active_dialogues, id) then
 					table.remove(self._dialogue_speakers, i)
 				end
 			end
-			
+
 			dialogue_speakers = table.clone(self._dialogue_speakers)
 		end
 	end
@@ -363,12 +435,15 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 	if mod:get("enable_voip") ~= false then
 		local show_self_voip = mod:get("show_self") ~= false
 		local voip_distance_threshold = mod:get("voip_distance") or 0
-		local local_pos = local_player and local_player.player_unit and Unit.alive(local_player.player_unit) and Unit.world_position(local_player.player_unit, 1)
+		local local_pos = local_player
+			and local_player.player_unit
+			and Unit.alive(local_player.player_unit)
+			and Unit.world_position(local_player.player_unit, 1)
 
 		for i = 1, #self._voip_speakers do
 			local account_id = self._voip_speakers[i]
 			local is_local = (local_player_id and account_id == local_player_id)
-			
+
 			local should_add = false
 
 			if is_local then
@@ -395,7 +470,7 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 				end
 				should_add = is_far_enough
 			end
-			
+
 			if should_add then
 				if not table.find(voip_speakers, account_id) then
 					table.insert(voip_speakers, account_id)
@@ -432,7 +507,7 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 
 	local max_slots_setting = mod:get("max_slots") or 4
 	local actual_max_slots = math.min(max_slots_setting, MAX_SLOTS)
-	
+
 	local remaining_speakers = table.clone(current_speakers)
 
 	for slot = 1, MAX_SLOTS do
@@ -465,7 +540,7 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 				break
 			end
 		end
-		
+
 		if empty_slot then
 			self._active_slots[empty_slot] = speaker
 			self:_mission_speaker_start(empty_slot, speaker, is_dialogue_map[speaker], self._in_game_subtitles[speaker])
@@ -473,7 +548,7 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 			break
 		end
 	end
-	
+
 	local current_hud_scale = mod:get("hud_scale") or 1.0
 	local current_subtitle_offset_x = mod:get("subtitle_offset_x") or 0
 	local current_subtitle_offset_y = mod:get("subtitle_offset_y") or 95
@@ -484,7 +559,8 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 	local color_b = subtitle_color[4]
 	local color_a = subtitle_color[1]
 
-	if mod:get("alignment") ~= self._current_alignment
+	if
+		mod:get("alignment") ~= self._current_alignment
 		or current_hud_scale ~= self._current_hud_scale
 		or current_subtitle_offset_x ~= self._current_subtitle_offset_x
 		or current_subtitle_offset_y ~= self._current_subtitle_offset_y
@@ -492,8 +568,8 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 		or color_r ~= self._color_r
 		or color_g ~= self._color_g
 		or color_b ~= self._color_b
-		or color_a ~= self._color_a then
-		
+		or color_a ~= self._color_a
+	then
 		self._current_hud_scale = current_hud_scale
 		self._current_subtitle_offset_x = current_subtitle_offset_x
 		self._current_subtitle_offset_y = current_subtitle_offset_y
@@ -505,7 +581,7 @@ HudElementPlayerVoicePopup.update = function (self, dt, t, ui_renderer, render_s
 
 		self:_update_alignment()
 	end
-	
+
 	for slot = 1, MAX_SLOTS do
 		local anim_id = self._popup_animation_ids[slot]
 		if anim_id and not self:_is_animation_active(anim_id) then
@@ -522,11 +598,13 @@ end
 
 HudElementPlayerVoicePopup._update_slot_ui = function(self, slot, dt)
 	local account_id = self._active_slots[slot]
-	if not account_id then return end
+	if not account_id then
+		return
+	end
 
 	local subtitle_state = self._subtitle_states[slot] or {}
 	self._subtitle_states[slot] = subtitle_state
-	
+
 	local new_subtitle = self._in_game_subtitles[account_id]
 	if subtitle_state.id ~= new_subtitle then
 		subtitle_state.id = new_subtitle
@@ -537,35 +615,36 @@ HudElementPlayerVoicePopup._update_slot_ui = function(self, slot, dt)
 		subtitle_state.full_text = text
 		subtitle_state.scroll_index = 1
 		subtitle_state.scroll_timer = 0
-		self._widgets_by_name["subtitle_text_"..slot].content.subtitle_text = text
+		self._widgets_by_name["subtitle_text_" .. slot].content.subtitle_text = text
 	end
-	
+
 	if subtitle_state.full_text and subtitle_state.full_text ~= "" then
 		if mod:get("scroll_subtitles") ~= false then
 			local text = subtitle_state.full_text
 			local total_len = utf8_len(text)
 			local scroll_len = mod:get("scroll_subtitles_length") or 40
-			
+
 			if total_len > scroll_len then
 				local speed = mod:get("scroll_subtitles_speed") or 0.2
 				subtitle_state.scroll_timer = (subtitle_state.scroll_timer or 0) + dt
 				if subtitle_state.scroll_timer >= speed then
 					subtitle_state.scroll_timer = subtitle_state.scroll_timer - speed
 					subtitle_state.scroll_index = (subtitle_state.scroll_index or 1) + 1
-					
+
 					if subtitle_state.scroll_index > total_len then
 						subtitle_state.scroll_index = 1
 					end
 				end
-				
+
 				local padded_text = text .. "          " .. text
-				local display_text = utf8_sub(padded_text, subtitle_state.scroll_index, subtitle_state.scroll_index + scroll_len - 1)
-				self._widgets_by_name["subtitle_text_"..slot].content.subtitle_text = display_text
+				local display_text =
+					utf8_sub(padded_text, subtitle_state.scroll_index, subtitle_state.scroll_index + scroll_len - 1)
+				self._widgets_by_name["subtitle_text_" .. slot].content.subtitle_text = display_text
 			else
-				self._widgets_by_name["subtitle_text_"..slot].content.subtitle_text = subtitle_state.full_text
+				self._widgets_by_name["subtitle_text_" .. slot].content.subtitle_text = subtitle_state.full_text
 			end
 		else
-			self._widgets_by_name["subtitle_text_"..slot].content.subtitle_text = subtitle_state.full_text
+			self._widgets_by_name["subtitle_text_" .. slot].content.subtitle_text = subtitle_state.full_text
 		end
 	end
 
@@ -574,9 +653,9 @@ HudElementPlayerVoicePopup._update_slot_ui = function(self, slot, dt)
 		self._incoming_dots_timers[slot] = 0
 		self._incoming_dots_counts[slot] = ((self._incoming_dots_counts[slot] or 0) + 1) % 4
 		local dots = string.rep(".", self._incoming_dots_counts[slot])
-		
+
 		local base_text = subtitle_state.is_dialogue and "INCOMING" or "VOICE COMM - INCOMING"
-		self._widgets_by_name["title_text_"..slot].content.title_text = base_text .. dots
+		self._widgets_by_name["title_text_" .. slot].content.title_text = base_text .. dots
 	end
 
 	local bar_timer = self._bar_timers[slot] or 0
@@ -588,14 +667,20 @@ HudElementPlayerVoicePopup._update_slot_ui = function(self, slot, dt)
 	end
 	self._bar_timers[slot] = bar_timer
 
-	local widget = self._widgets_by_name["popup_"..slot]
-	if widget and widget.style.portrait and widget.style.portrait.material == "content/ui/materials/base/ui_radio_portrait_base" and widget.style.portrait.material_values then
-		local anim_progress = math.min((1 + math.sin(Application.time_since_launch() * 6) * 0.5) * math.random_range(0.3, 0.8), 1)
+	local widget = self._widgets_by_name["popup_" .. slot]
+	if
+		widget
+		and widget.style.portrait
+		and widget.style.portrait.material == "content/ui/materials/base/ui_radio_portrait_base"
+		and widget.style.portrait.material_values
+	then
+		local anim_progress =
+			math.min((1 + math.sin(Application.time_since_launch() * 6) * 0.5) * math.random_range(0.3, 0.8), 1)
 		widget.style.portrait.material_values.distortion = 0.8 + (anim_progress * 0.4)
 		widget.dirty = true
 	end
-	
-	local subtitle_widget = self._widgets_by_name["subtitle_text_"..slot]
+
+	local subtitle_widget = self._widgets_by_name["subtitle_text_" .. slot]
 	if subtitle_widget then
 		local subtitle_text = subtitle_widget.content.subtitle_text
 		if subtitle_text and subtitle_text ~= "" then
@@ -607,13 +692,16 @@ HudElementPlayerVoicePopup._update_slot_ui = function(self, slot, dt)
 	end
 end
 
-HudElementPlayerVoicePopup._update_bar_value = function (self, slot, dt)
+HudElementPlayerVoicePopup._update_bar_value = function(self, slot, dt)
 	local bar_widgets = self._bar_widgets[slot]
-	if not bar_widgets then return end
-	
+	if not bar_widgets then
+		return
+	end
+
 	local num_bars = #bar_widgets
 	local next_bar_index = math.index_wrapper((self._previous_bar_indices[slot] or 0) + 1, num_bars)
-	local anim_progress = math.min((1 + math.sin(Application.time_since_launch() * 6) * 0.5) * math.random_range(0.3, 0.8), 1)
+	local anim_progress =
+		math.min((1 + math.sin(Application.time_since_launch() * 6) * 0.5) * math.random_range(0.3, 0.8), 1)
 	local hud_scale = self._current_hud_scale or mod:get("hud_scale") or 1.0
 	local bar_height = 30 * hud_scale
 
@@ -633,7 +721,7 @@ HudElementPlayerVoicePopup._update_bar_value = function (self, slot, dt)
 	self._previous_bar_indices[slot] = next_bar_index
 end
 
-HudElementPlayerVoicePopup._mission_speaker_stop = function (self, slot)
+HudElementPlayerVoicePopup._mission_speaker_stop = function(self, slot)
 	if self._popup_animation_ids[slot] then
 		self:_stop_animation(self._popup_animation_ids[slot])
 		self._popup_animation_ids[slot] = nil
@@ -643,7 +731,7 @@ HudElementPlayerVoicePopup._mission_speaker_stop = function (self, slot)
 	self._popup_animation_ids[slot] = popup_animation_id
 end
 
-HudElementPlayerVoicePopup._mission_speaker_start = function (self, slot, account_id, is_dialogue, subtitle_id)
+HudElementPlayerVoicePopup._mission_speaker_start = function(self, slot, account_id, is_dialogue, subtitle_id)
 	if self._popup_animation_ids[slot] then
 		self:_stop_animation(self._popup_animation_ids[slot])
 		self._popup_animation_ids[slot] = nil
@@ -715,22 +803,22 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, slot, accoun
 	end
 
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name["name_text_"..slot].content.name_text = name
-	
+	widgets_by_name["name_text_" .. slot].content.name_text = name
+
 	self._subtitle_states[slot] = { is_dialogue = is_dialogue }
 	self._incoming_dots_timers[slot] = 0
 	self._incoming_dots_counts[slot] = 0
-	
+
 	if is_dialogue then
-		widgets_by_name["title_text_"..slot].content.title_text = "INCOMING"
+		widgets_by_name["title_text_" .. slot].content.title_text = "INCOMING"
 	else
-		widgets_by_name["title_text_"..slot].content.title_text = "VOICE COMM - INCOMING"
+		widgets_by_name["title_text_" .. slot].content.title_text = "VOICE COMM - INCOMING"
 	end
-	
+
 	if subtitle_id and mod:get("show_subtitles") ~= false then
-		widgets_by_name["subtitle_text_"..slot].content.subtitle_text = Localize(subtitle_id)
+		widgets_by_name["subtitle_text_" .. slot].content.subtitle_text = Localize(subtitle_id)
 	else
-		widgets_by_name["subtitle_text_"..slot].content.subtitle_text = ""
+		widgets_by_name["subtitle_text_" .. slot].content.subtitle_text = ""
 	end
 
 	local style = "pfp"
@@ -757,10 +845,10 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, slot, accoun
 
 	self:_unload_portrait_icon(slot)
 
-	widgets_by_name["popup_"..slot].content.portrait = "content/ui/materials/base/ui_radio_portrait_base"
-	widgets_by_name["popup_"..slot].style.portrait.material = "content/ui/materials/base/ui_radio_portrait_base"
-	if widgets_by_name["popup_"..slot].style.portrait.material_values then
-		widgets_by_name["popup_"..slot].style.portrait.material_values.distortion = 1
+	widgets_by_name["popup_" .. slot].content.portrait = "content/ui/materials/base/ui_radio_portrait_base"
+	widgets_by_name["popup_" .. slot].style.portrait.material = "content/ui/materials/base/ui_radio_portrait_base"
+	if widgets_by_name["popup_" .. slot].style.portrait.material_values then
+		widgets_by_name["popup_" .. slot].style.portrait.material_values.distortion = 1
 	end
 
 	if load_3d then
@@ -778,19 +866,19 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, slot, accoun
 			if self._active_slots[slot] ~= account_id then
 				return
 			end
-			local widget = self._widgets_by_name["popup_"..slot]
+			local widget = self._widgets_by_name["popup_" .. slot]
 			if widget then
 				local portrait_style = widget.style.profile
 				if portrait_style then
 					portrait_style.material_values.texture_map = texture
 					widget.content.use_pfp_frame = true
-					
+
 					widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 					widget.style.portrait.material = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 					if widget.style.portrait.material_values then
 						widget.style.portrait.material_values.distortion = 0
 					end
-					
+
 					widget.dirty = true
 				end
 			end
@@ -801,7 +889,7 @@ HudElementPlayerVoicePopup._mission_speaker_start = function (self, slot, accoun
 	self._popup_animation_ids[slot] = popup_animation_id
 end
 
-HudElementPlayerVoicePopup._load_portrait_icon = function (self, slot, profile, player_info)
+HudElementPlayerVoicePopup._load_portrait_icon = function(self, slot, profile, player_info)
 	self:_unload_portrait_icon(slot)
 
 	local load_cb = callback(self, "_cb_set_player_icon", slot, profile)
@@ -814,7 +902,7 @@ HudElementPlayerVoicePopup._load_portrait_icon = function (self, slot, profile, 
 	}
 end
 
-HudElementPlayerVoicePopup._load_portrait_frame = function (self, slot, profile)
+HudElementPlayerVoicePopup._load_portrait_frame = function(self, slot, profile)
 	self:_unload_portrait_frame(slot)
 
 	local frame_item = profile.loadout and profile.loadout.portrait_frame
@@ -830,7 +918,7 @@ HudElementPlayerVoicePopup._load_portrait_frame = function (self, slot, profile)
 	}
 end
 
-HudElementPlayerVoicePopup._unload_portrait_frame = function (self, slot)
+HudElementPlayerVoicePopup._unload_portrait_frame = function(self, slot)
 	local frame_loaded_info = self._frame_loaded_infos[slot]
 	if not frame_loaded_info then
 		return
@@ -840,19 +928,19 @@ HudElementPlayerVoicePopup._unload_portrait_frame = function (self, slot)
 	Managers.ui:unload_item_icon(icon_load_id)
 	self._frame_loaded_infos[slot] = nil
 
-	local widget = self._widgets_by_name["popup_"..slot]
+	local widget = self._widgets_by_name["popup_" .. slot]
 	if widget and widget.style.pfp_frame then
 		widget.style.pfp_frame.material_values.texture_map = "content/ui/textures/nameplates/portrait_frames/default"
 		widget.dirty = true
 	end
 end
 
-HudElementPlayerVoicePopup._cb_set_player_frame = function (self, slot, item)
+HudElementPlayerVoicePopup._cb_set_player_frame = function(self, slot, item)
 	if self.__deleted then
 		return
 	end
 
-	local widget = self._widgets_by_name["popup_"..slot]
+	local widget = self._widgets_by_name["popup_" .. slot]
 	if widget and widget.style.pfp_frame then
 		local icon = item.icon or "content/ui/textures/nameplates/portrait_frames/default"
 		widget.style.pfp_frame.material_values.texture_map = icon
@@ -860,8 +948,8 @@ HudElementPlayerVoicePopup._cb_set_player_frame = function (self, slot, item)
 	end
 end
 
-HudElementPlayerVoicePopup._unload_portrait_icon = function (self, slot)
-	local widget = self._widgets_by_name["popup_"..slot]
+HudElementPlayerVoicePopup._unload_portrait_icon = function(self, slot)
+	local widget = self._widgets_by_name["popup_" .. slot]
 	if widget and widget.style.profile then
 		widget.style.profile.material_values.texture_map = nil
 		widget.content.use_pfp_frame = false
@@ -878,10 +966,12 @@ HudElementPlayerVoicePopup._unload_portrait_icon = function (self, slot)
 	self._portrait_loaded_infos[slot] = nil
 end
 
-HudElementPlayerVoicePopup._cb_set_player_icon = function (self, slot, profile, grid_index, rows, columns, render_target)
-	local widget = self._widgets_by_name["popup_"..slot]
-	if not widget then return end
-	
+HudElementPlayerVoicePopup._cb_set_player_icon = function(self, slot, profile, grid_index, rows, columns, render_target)
+	local widget = self._widgets_by_name["popup_" .. slot]
+	if not widget then
+		return
+	end
+
 	local material_values = widget.style.portrait.material_values
 
 	if not widget.content.use_pfp_frame then
@@ -898,10 +988,12 @@ HudElementPlayerVoicePopup._cb_set_player_icon = function (self, slot, profile, 
 	widget.dirty = true
 end
 
-HudElementPlayerVoicePopup._cb_unset_player_icon = function (self, slot)
-	local widget = self._widgets_by_name["popup_"..slot]
-	if not widget then return end
-	
+HudElementPlayerVoicePopup._cb_unset_player_icon = function(self, slot)
+	local widget = self._widgets_by_name["popup_" .. slot]
+	if not widget then
+		return
+	end
+
 	local material_values = widget.style.portrait.material_values
 
 	material_values.use_placeholder_texture = nil
@@ -910,13 +1002,13 @@ HudElementPlayerVoicePopup._cb_unset_player_icon = function (self, slot)
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 
-    widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 	widget.style.portrait.material = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 
 	widget.dirty = true
 end
 
-HudElementPlayerVoicePopup._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
+HudElementPlayerVoicePopup._draw_widgets = function(self, dt, t, input_service, ui_renderer, render_settings)
 	local any_active = false
 	for slot = 1, MAX_SLOTS do
 		if self._popup_animation_ids[slot] or self._active_slots[slot] then
@@ -949,14 +1041,14 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 	local ui_scenegraph = self._ui_scenegraph
 
 	for slot = 1, MAX_SLOTS do
-		if ui_scenegraph and ui_scenegraph["background_"..slot] then
-			local node = ui_scenegraph["background_"..slot]
+		if ui_scenegraph and ui_scenegraph["background_" .. slot] then
+			local node = ui_scenegraph["background_" .. slot]
 			node.horizontal_alignment = alignment
 			node.size[1] = portrait_size[1]
 			node.size[2] = portrait_size[2]
 		end
 
-		local popup = self._widgets_by_name["popup_"..slot]
+		local popup = self._widgets_by_name["popup_" .. slot]
 		if popup then
 			if popup.style.profile then
 				popup.style.profile.size[1] = portrait_size[1] - (20 * hud_scale)
@@ -975,7 +1067,7 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 			end
 		end
 
-		local name_text = self._widgets_by_name["name_text_"..slot]
+		local name_text = self._widgets_by_name["name_text_" .. slot]
 		if name_text then
 			name_text.style.name_text.horizontal_alignment = alignment
 			name_text.style.name_text.text_horizontal_alignment = alignment
@@ -986,7 +1078,7 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 			name_text.style.name_text.font_size = 24 * hud_scale
 		end
 
-		local title_text = self._widgets_by_name["title_text_"..slot]
+		local title_text = self._widgets_by_name["title_text_" .. slot]
 		if title_text then
 			title_text.style.title_text.horizontal_alignment = alignment
 			title_text.style.title_text.text_horizontal_alignment = alignment
@@ -997,18 +1089,19 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 			title_text.style.title_text.font_size = 24 * hud_scale
 		end
 
-		local subtitle_text = self._widgets_by_name["subtitle_text_"..slot]
+		local subtitle_text = self._widgets_by_name["subtitle_text_" .. slot]
 		if subtitle_text then
 			local sub_offset_x = mod:get("subtitle_offset_x") or 0
 			local sub_offset_y = (mod:get("subtitle_offset_y") or 95) * hud_scale
 			local sub_font_size = (mod:get("subtitle_font_size") or 24) * hud_scale
-			
+
 			local color_table = mod:get("subtitle_color") or { 255, 241, 231, 163 }
 
 			local base_x = 0
 			subtitle_text.style.subtitle_text.horizontal_alignment = alignment
 			subtitle_text.style.subtitle_text.text_horizontal_alignment = alignment
-			subtitle_text.style.subtitle_text.offset[1] = base_x + (is_left and (sub_offset_x * hud_scale) or -(sub_offset_x * hud_scale))
+			subtitle_text.style.subtitle_text.offset[1] = base_x
+				+ (is_left and (sub_offset_x * hud_scale) or -(sub_offset_x * hud_scale))
 			subtitle_text.style.subtitle_text.offset[2] = sub_offset_y
 			subtitle_text.style.subtitle_text.size[1] = 650 * hud_scale
 			subtitle_text.style.subtitle_text.size[2] = 300 * hud_scale
@@ -1016,7 +1109,7 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 			subtitle_text.style.subtitle_text.text_color = color_table
 		end
 
-		local radio = self._widgets_by_name["radio_"..slot]
+		local radio = self._widgets_by_name["radio_" .. slot]
 		if radio then
 			radio.style.soundwave.horizontal_alignment = alignment
 			radio.style.soundwave.offset[1] = is_left and (265 * hud_scale) or -(265 * hud_scale)
@@ -1040,7 +1133,7 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 				widget.style.frame.size_addition[2] = 4 * hud_scale
 				widget.style.frame.offset[1] = is_left and (-2 * hud_scale) or (2 * hud_scale)
 				widget.style.frame.offset[2] = 2 * hud_scale
-				
+
 				local x_pos = bar_offset_x + (bar_size[1] + bar_spacing) * (i - 1)
 				widget.offset[1] = is_left and x_pos or -x_pos
 			end

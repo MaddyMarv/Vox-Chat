@@ -27,7 +27,7 @@ local default_positions = {
 for i = 1, MAX_SLOTS do
 	local slot_x = mod and mod:get("slot_" .. i .. "_x") or default_positions[i][1]
 	local slot_y = mod and mod:get("slot_" .. i .. "_y") or default_positions[i][2]
-	scenegraph_definition["background_"..i] = {
+	scenegraph_definition["background_" .. i] = {
 		horizontal_alignment = "left",
 		parent = "screen",
 		vertical_alignment = "top",
@@ -77,7 +77,7 @@ local widget_definitions = {}
 for i = 1, MAX_SLOTS do
 	local bg_name = "background_" .. i
 
-	widget_definitions["popup_"..i] = UIWidget.create_definition({
+	widget_definitions["popup_" .. i] = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			style_id = "portrait",
@@ -181,7 +181,7 @@ for i = 1, MAX_SLOTS do
 		},
 	}, bg_name)
 
-	widget_definitions["name_text_"..i] = UIWidget.create_definition({
+	widget_definitions["name_text_" .. i] = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			style_id = "name_text",
@@ -191,7 +191,7 @@ for i = 1, MAX_SLOTS do
 		},
 	}, bg_name)
 
-	widget_definitions["title_text_"..i] = UIWidget.create_definition({
+	widget_definitions["title_text_" .. i] = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			style_id = "title_text",
@@ -201,7 +201,7 @@ for i = 1, MAX_SLOTS do
 		},
 	}, bg_name)
 
-	widget_definitions["subtitle_text_"..i] = UIWidget.create_definition({
+	widget_definitions["subtitle_text_" .. i] = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			style_id = "subtitle_text",
@@ -211,7 +211,7 @@ for i = 1, MAX_SLOTS do
 		},
 	}, bg_name)
 
-	widget_definitions["radio_"..i] = UIWidget.create_definition({
+	widget_definitions["radio_" .. i] = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			style_id = "soundwave",
@@ -299,28 +299,42 @@ local animations = {
 			end_time = 0,
 			name = "hide everything",
 			start_time = 0,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			init = function(parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local slot = params.slot
-				if not slot then return end
-				
+				if not slot then
+					return
+				end
+
 				local prefix = "popup_" .. slot
-				if widgets[prefix] then widgets[prefix].alpha_multiplier = 0 end
-				
+				if widgets[prefix] then
+					widgets[prefix].alpha_multiplier = 0
+				end
+
 				prefix = "name_text_" .. slot
-				if widgets[prefix] then widgets[prefix].alpha_multiplier = 0 end
-				
+				if widgets[prefix] then
+					widgets[prefix].alpha_multiplier = 0
+				end
+
 				prefix = "title_text_" .. slot
-				if widgets[prefix] then widgets[prefix].alpha_multiplier = 0 end
-				
+				if widgets[prefix] then
+					widgets[prefix].alpha_multiplier = 0
+				end
+
 				prefix = "subtitle_text_" .. slot
-				if widgets[prefix] then widgets[prefix].alpha_multiplier = 0 end
-				
+				if widgets[prefix] then
+					widgets[prefix].alpha_multiplier = 0
+				end
+
 				prefix = "radio_" .. slot
-				if widgets[prefix] then widgets[prefix].alpha_multiplier = 0 end
-				
-				for b=1, bar_amount do
+				if widgets[prefix] then
+					widgets[prefix].alpha_multiplier = 0
+				end
+
+				for b = 1, bar_amount do
 					local b_prefix = "bar_" .. slot .. "_" .. b
-					if widgets[b_prefix] then widgets[b_prefix].alpha_multiplier = 0 end
+					if widgets[b_prefix] then
+						widgets[b_prefix].alpha_multiplier = 0
+					end
 				end
 			end,
 		},
@@ -328,13 +342,15 @@ local animations = {
 			end_time = 0.2,
 			name = "icon_fade_in",
 			start_time = 0.0,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			update = function(parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local slot = params.slot
-				if not slot then return end
-				
+				if not slot then
+					return
+				end
+
 				local anim_progress = math.easeOutCubic(progress)
-				local popup_widget = widgets["popup_"..slot]
-				
+				local popup_widget = widgets["popup_" .. slot]
+
 				if popup_widget then
 					local mod = get_mod("VoxChat")
 					local alignment = mod and mod:get("alignment") or "left"
@@ -351,22 +367,24 @@ local animations = {
 			end_time = 0.3,
 			name = "text_fade_in",
 			start_time = 0.1,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			update = function(parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local slot = params.slot
-				if not slot then return end
-				
+				if not slot then
+					return
+				end
+
 				local anim_progress = math.easeCubic(progress)
-				
+
 				local elements = {
 					"name_text_" .. slot,
 					"title_text_" .. slot,
 					"subtitle_text_" .. slot,
-					"radio_" .. slot
+					"radio_" .. slot,
 				}
-				for i=1, bar_amount do
+				for i = 1, bar_amount do
 					table.insert(elements, "bar_" .. slot .. "_" .. i)
 				end
-				
+
 				for _, key in ipairs(elements) do
 					local widget = widgets[key]
 					if widget then
@@ -381,22 +399,24 @@ local animations = {
 			end_time = 0.15,
 			name = "text_fade_out",
 			start_time = 0,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			update = function(parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local slot = params.slot
-				if not slot then return end
-				
+				if not slot then
+					return
+				end
+
 				local anim_progress = 1 - math.easeOutCubic(progress)
 
 				local elements = {
 					"name_text_" .. slot,
 					"title_text_" .. slot,
 					"subtitle_text_" .. slot,
-					"radio_" .. slot
+					"radio_" .. slot,
 				}
-				for i=1, bar_amount do
+				for i = 1, bar_amount do
 					table.insert(elements, "bar_" .. slot .. "_" .. i)
 				end
-				
+
 				for _, key in ipairs(elements) do
 					local widget = widgets[key]
 					if widget then
@@ -410,13 +430,15 @@ local animations = {
 			end_time = 0.3,
 			name = "icon_fade_out",
 			start_time = 0.15,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			update = function(parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local slot = params.slot
-				if not slot then return end
-				
+				if not slot then
+					return
+				end
+
 				local anim_progress = 1 - math.easeOutCubic(progress)
-				local popup_widget = widgets["popup_"..slot]
-				
+				local popup_widget = widgets["popup_" .. slot]
+
 				if popup_widget then
 					local mod = get_mod("VoxChat")
 					local alignment = mod and mod:get("alignment") or "left"
@@ -435,10 +457,10 @@ return {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-    portrait_size = portrait_size,
-    bar_amount = bar_amount,
-    bar_size = bar_size,
-    bar_offset = { portrait_size[1] + (20 * hud_scale), 0, 0 },
-    bar_spacing = 10 * hud_scale,
+	portrait_size = portrait_size,
+	bar_amount = bar_amount,
+	bar_size = bar_size,
+	bar_offset = { portrait_size[1] + (20 * hud_scale), 0, 0 },
+	bar_spacing = 10 * hud_scale,
 	max_slots = MAX_SLOTS,
 }
