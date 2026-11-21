@@ -11,7 +11,6 @@ local bar_amount = 7
 local bar_size = { 12 * hud_scale, 30 * hud_scale }
 
 local MAX_SLOTS = 4
-local slot_spacing_y = 140 * hud_scale
 
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,

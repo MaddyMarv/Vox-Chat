@@ -380,7 +380,7 @@ HudElementPlayerVoicePopup.update = function(self, dt, t, ui_renderer, render_se
 					end
 
 					local is_local = (local_player and unit == local_player.player_unit)
-					local should_add = false
+					local should_add
 
 					if is_local then
 						should_add = mod:get("show_self_dialogue") ~= false
@@ -444,7 +444,7 @@ HudElementPlayerVoicePopup.update = function(self, dt, t, ui_renderer, render_se
 			local account_id = self._voip_speakers[i]
 			local is_local = (local_player_id and account_id == local_player_id)
 
-			local should_add = false
+			local should_add
 
 			if is_local then
 				should_add = show_self_voip
@@ -787,7 +787,7 @@ HudElementPlayerVoicePopup._mission_speaker_start = function(self, slot, account
 	name = character_name
 
 	if account_name and character_name then
-		local format = "character"
+		local format
 		if is_dialogue then
 			format = mod:get("dialogue_name_display_format") or "character"
 		else
@@ -821,7 +821,7 @@ HudElementPlayerVoicePopup._mission_speaker_start = function(self, slot, account
 		widgets_by_name["subtitle_text_" .. slot].content.subtitle_text = ""
 	end
 
-	local style = "pfp"
+	local style
 	if is_dialogue then
 		style = mod:get("dialogue_portrait_style") or "3d"
 	else
@@ -1034,7 +1034,6 @@ HudElementPlayerVoicePopup._update_alignment = function(self)
 
 	local portrait_size = { 80 * hud_scale, 90 * hud_scale }
 	local bar_size = { 12 * hud_scale, 30 * hud_scale }
-	local slot_spacing_y = 140 * hud_scale
 	local bar_offset_x = portrait_size[1] + (20 * hud_scale)
 	local bar_spacing = 10 * hud_scale
 
