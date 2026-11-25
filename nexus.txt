@@ -3,30 +3,34 @@ Displays a character portrait when someone speaks over voice chat. Supports 3D o
 [b]Mod Settings / Commands:[/b]
 [spoiler]
 [b]Voice Chat (VOIP)[/b]
-- Enable Voice Chat Trigger & Priority
+- Enable Voice Chat Trigger
+- Prioritize Voice Chat
 - Voice Chat Distance Threshold
 - Show Self
-- VOIP Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
-- VOIP Name Format [Character Name, Account Name, Character (Account), Account (Character)]
 
 [b]In-Game Dialogue[/b]
 - Trigger on In-Game Dialogue
-- Dialogue Filter Mode [Show All, Combat & Pings Only, Banter & Story Only]
-- Vox Distance Threshold & Show Self
-- In-Game Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
-- In-Game Name Format [Character Name, Account Name, Character (Account), Account (Character)]
+- Dialogue Filter Mode [Show All (Default), Combat & Pings Only, Banter & Story Only]
+- Vox Distance Threshold
+- Show Self (In-Game)
 
 [b]Appearance & UI[/b]
 - Alignment [Left, Right]
-- Max Visible Slots & HUD Scale
-- Mission Only Mode
+- VOIP / In-Game Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
+- Max Visible Slots
+- HUD Scale
+- Mission Only
+- VOIP / In-Game Name Format [Character Name, Account Name, Character (Account), Account (Character)]
 
 [b]Custom Positions[/b]
-- Slot 1–4 X/Y Offsets
+- Slot 1–4 X/Y Offset
 
 [b]Subtitles[/b]
-- Show & Scroll Subtitles (Scroll Speed, Max Characters)
-- Subtitle Customization (Font Size, Color, X/Y Offset)
+- Show Subtitles
+- Scroll Subtitles (Scroll Max Characters, Scroll Speed (Seconds))
+- Subtitle X/Y Offset
+- Subtitle Font Size
+- Subtitle Color
 [/spoiler]
 
 [b]Links:[/b]

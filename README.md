@@ -7,30 +7,34 @@ Displays a character portrait when someone speaks over voice chat. Supports 3D o
 <summary><b>Mod Settings / Commands</b></summary>
 
 **Voice Chat (VOIP)**
-- Enable Voice Chat Trigger & Priority
+- Enable Voice Chat Trigger
+- Prioritize Voice Chat
 - Voice Chat Distance Threshold
 - Show Self
-- VOIP Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
-- VOIP Name Format [Character Name, Account Name, Character (Account), Account (Character)]
 
 **In-Game Dialogue**
 - Trigger on In-Game Dialogue
-- Dialogue Filter Mode [Show All, Combat & Pings Only, Banter & Story Only]
-- Vox Distance Threshold & Show Self
-- In-Game Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
-- In-Game Name Format [Character Name, Account Name, Character (Account), Account (Character)]
+- Dialogue Filter Mode [Show All (Default), Combat & Pings Only, Banter & Story Only]
+- Vox Distance Threshold
+- Show Self (In-Game)
 
 **Appearance & UI**
 - Alignment [Left, Right]
-- Max Visible Slots & HUD Scale
-- Mission Only Mode
+- VOIP / In-Game Portrait Style [Custom Picture (PFP Mod), 3D Character Face, NPC TV Screen]
+- Max Visible Slots
+- HUD Scale
+- Mission Only
+- VOIP / In-Game Name Format [Character Name, Account Name, Character (Account), Account (Character)]
 
 **Custom Positions**
-- Slot 1–4 X/Y Offsets
+- Slot 1–4 X/Y Offset
 
 **Subtitles**
-- Show & Scroll Subtitles (Scroll Speed, Max Characters)
-- Subtitle Customization (Font Size, Color, X/Y Offset)
+- Show Subtitles
+- Scroll Subtitles (Scroll Max Characters, Scroll Speed (Seconds))
+- Subtitle X/Y Offset
+- Subtitle Font Size
+- Subtitle Color
 </details>
 
 🔗 **Links:** [Source Code](https://github.com/MaddyMarv/Vox-Chat) | [Nexus Mods Profile](https://www.nexusmods.com/profile/indicabunny) | [Support Me on Ko-fi](https://ko-fi.com/indicabunny)
