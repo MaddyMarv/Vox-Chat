@@ -1,6 +1,6 @@
 local loc = {
 	mod_name = {
-		en = "VoxChat",
+		en = "Vox Chat",
 	},
 	mod_description = {
 		en = "Displays a character portrait when someone speaks over voice chat. Supports 3D operative faces, PFP mod avatars, or NPC TV icon style.",
